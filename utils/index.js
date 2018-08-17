@@ -49,7 +49,6 @@ const utils = {
       } else {
         req.session.returnTo = req.url;
         res.redirect('/login');
-        return next();
       }
     } catch (e) {
       logger.error(e);
