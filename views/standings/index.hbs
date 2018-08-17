@@ -1,0 +1,45 @@
+<section>
+  <table class="table">
+    <caption>Goalmine standings</caption>
+    <thead>
+      <tr>
+        <th scope="column">Place</th>
+        <th scope="column">Player</th>
+        <th scope="column">Games</th>
+        <th scope="column">Points <small>(lowest)</small></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each goalmine }}
+      <tr>
+        <th scope="row"><span class="{{ class }}">{{ symbol }}</span> {{ rank }} <small>({{ prevrank }})</small></th>
+        <td><a href="/users/{{ id }}">{{ username }}</a></td>
+        <td>{{ games }}</td>
+        <td>{{ points }} <small>({{ min }})</small></td>
+      </tr>
+      {{/each }}
+    </tbody>
+  </table>
+
+  <table class="table">
+    <caption>Tipping standings</caption>
+    <thead>
+      <tr>
+        <th scope="column">Place</th>
+        <th scope="column">Player</th>
+        <th scope="column">Balance</th>
+        <th scope="column">Last Week</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each tipping }}
+      <tr>
+        <th scope="row">{{ rank }}</td>
+        <td><a href="/users/{{ id }}">{{ username }}</a></td>
+        <td>{{ balance }}</td>
+        <td>{{ prevbal }} <small>({{ prevrank }})</small></td>
+      </tr>
+      {{/each }}
+    </tbody>
+  </table>
+</section>

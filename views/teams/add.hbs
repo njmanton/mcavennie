@@ -1,0 +1,16 @@
+<section>
+  <h3>{{ title }}</h3>
+
+  <form action="/teams/add" method="post">
+    <label for="team">Add New Team: <span style="color: red;">*</span>
+      <input type="text" name="team" id="proposedTeam" />
+      <span role="alert" class="intrainput" id="team-dup"></span><br />
+    </label>
+    <label for="teamCountry">Country:
+      <input type="text" id="teamCountry" />
+    </label>
+    <input type="hidden" name="country" id="countryCode" />
+    <input type="submit" id="addTeam" />
+  </form>
+
+</section>

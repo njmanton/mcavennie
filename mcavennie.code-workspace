@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.exclude": {
+			"*.git": true,
+			"*.sublime*": true,
+			"*.code-workspace": true
+		},
+		"eslint.run": "onSave",
+		"editor.wordWrap": "on"
+	},
+}

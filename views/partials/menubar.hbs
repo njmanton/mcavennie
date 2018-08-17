@@ -1,0 +1,10 @@
+<nav>
+  {{#if user }}
+  {{ user.username }} | <a href="/logout">logout</a>
+  {{ else }}
+  <a href="/login">login</a>
+  {{/if }}
+</nav>
+<style>
+  nav { background-color: #222; color: #dedede; }
+</style>

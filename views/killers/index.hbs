@@ -1,0 +1,24 @@
+<section>
+  <h3>Killer games</h3>
+
+  <table>
+    <thead>
+      <tr>       
+        <th>Start Week</th>
+        <th>Organiser</th>
+         <th>Description</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each games }}
+      <tr>
+        <td>{{ start_week }}</td>
+        <td><a href="/users/{{ user.id }}">{{ user.username }}</a></td>
+        <td><a href="/killers/{{ id }}">{{ description }}</a></td>
+        <td>{{#if complete }}Complete{{ else }}Active{{/if }}</td>
+      </tr>
+      {{/each }}
+    </tbody>
+  </table>
+</section>

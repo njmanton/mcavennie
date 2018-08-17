@@ -1,0 +1,17 @@
+<section>
+  <h3>{{ title }}</h3>
+
+  <form action="/leagues/add" method="post">
+
+      <label for="league">Add New League: <span style="color: red;">*</span>
+        <input type="text" name="league" id="proposedLeague" />
+        <span role="alert" class="intrainput" id="league-dup"></span><br />
+      </label>
+      <label for="leagueCountry">Country:
+        <input type="text" id="leagueCountry" />
+      </label>
+      <input type="hidden" name="country" id="countryCode" />
+      <input type="submit" id="addLeague" />
+  </form>
+
+</section>

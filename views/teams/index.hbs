@@ -1,0 +1,14 @@
+<section>
+  <h3>Goalmine Teams</h3>
+  <p>There are a total of <b>{{ teams.length }}</b> teams that have been included in at least one game, since Goalmine started. Click on a team to see all matches.</p>
+  <table class="f32">
+    {{#each teams }}
+    <tr>
+      <td>
+       <span class="flag-icon flag-icon-{{ country }}"></span>
+        <a href="/teams/{{ id }}">{{ name }}</a>
+      </td>
+    </tr>
+    {{/each }}    
+  </table>
+</section>

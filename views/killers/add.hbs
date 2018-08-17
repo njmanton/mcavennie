@@ -1,0 +1,27 @@
+<section>
+  <h3>{{ title }}</h3>
+
+  <form action="/killers/add" method="POST">
+    
+    <label for="players">Players:
+      <select name="players" id="players" multiple="multiple">
+        {{#each players }}
+        <option value="{{ id }}">{{ username }}</option>
+        {{/each }}
+      </select>
+    </label>
+    <label for="desc">Description
+      <textarea name="desc" cols="30" rows="3"></textarea>
+    </label>
+    <label for="week">Start Week
+      <select name="week" id="week">
+        {{#each weeks }}
+        <option value="{{ id }}">{{ id }} (w/c {{ fstart }})</option>
+        {{/each }}
+      </select>
+    </label>
+
+    <input type="submit" class="btn" value="Add" />
+
+  </form>
+</section>

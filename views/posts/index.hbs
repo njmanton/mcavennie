@@ -1,0 +1,22 @@
+<section>
+  <h3>All Posts</h3>
+
+  {{#each data }}
+  <div data-postid="{{ id }}" class="post">
+    <div class="postheader"><h4>{{ title }}</h4></div>
+    <div class="postbody">
+      <p>{{{ body }}}</p>        
+    </div>
+    <div class="postfooter">
+      <span>Posted by <a href="/users/{{ user.id }}">{{ user.username }}</a> on {{ date }}{{#if udate }}, updated on {{ udate }}{{/if }}</span>
+      <span class="ctrls" data-pid="{{ id }}">
+        {{#if ../user.admin }}
+        <span><a href="/posts/edit/{{ id }}"><span title="edit" data-pid="{{ id }}" class="fas fa-edit"></span></a></span>
+        <span data-delete-post data-title="{{ title }}" data-pid="{{ id }}"><span class="fa fa-trash"></span></span>
+        {{/if }}
+      </span>
+    </div>
+  </div>
+  {{/each }}
+  
+</section>

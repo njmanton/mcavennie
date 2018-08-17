@@ -1,0 +1,24 @@
+@import url(https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css);
+@import url(/assets/flags/css/flag-icon.min.css);
+table {
+  color: blue; }
+
+@keyframes fin {
+  from {
+    background-color: #7f7; }
+  to {
+    background-color: #e8e8e8; } }
+
+@-webkit-keyframes fin {
+  from {
+    background-color: #7f7; }
+  to {
+    background-color: #e8e8e8; } }
+
+.ajaxChange {
+  animation-name: fin;
+  animation-duration: 2s;
+  -webkit-animation-name: fin;
+  -webkit-animation-duration: 2s; }
+
+/* last */

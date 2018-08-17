@@ -1,0 +1,18 @@
+{{#if dev }}
+  {{#if debug }}
+  <section class="debug">
+    <h5>Debug: </h5>
+    <pre>{{ debug }}</pre>
+  </section>
+  {{/if }}
+{{/if }}
+<style>
+  .debug {
+    background-color: #222;
+    color: #eee;
+    font-family: 'Courier New', Courier, monospace
+  }
+  .debug pre {
+    color: #eee;
+  }
+</style>

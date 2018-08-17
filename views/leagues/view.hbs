@@ -1,0 +1,21 @@
+<section>
+  <h3><span class="flag-icon flag-icon-{{ league.country }}"></span> {{ league.name }}</h3>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="column">Week</th>
+        <th scope="column">Fixture</th>
+        <th scope="column">Result</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each matches }}
+      <tr>
+        <th scope="row">{{ week_id }}</th>
+        <td><a href="/matches/{{ id }}">{{ fixture }}</a></td>
+        <td>{{ result }}</td>
+      </tr>
+      {{/each }}
+    </tbody>
+  </table>
+</section>

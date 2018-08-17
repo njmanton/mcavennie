@@ -1,0 +1,7 @@
+node_modules
+nodemon.json
+test
+*.sublime*
+TODO.md
+logs/*.log
+.vscode

@@ -1,0 +1,72 @@
+<section id="preds" data-uid="{{ user.id }}">
+  <h2>Predictions</h2>
+
+    <p>Pick or update your predictions for week {{ week }} here. You can make as many changes as you want, up until the deadline. All predictions are automatically saved on entry (the cell will turn green briefly on a successful update). Don't forget to pick a Joker for one of the matches as well, which can't be the <acronym title="Game of the Week">GotW</acronym>.</p>
+    <table id="predTable" class="table grid">
+      <thead>
+        <tr>
+          <th class="grid-header">Date</th>
+          <th class="grid-header">League</th>
+          <th class="grid-header">Fixture</th>
+          <th class="grid-header">Result</th>
+          {{#each players }}
+          <th><a href="/users/{{#if id }}{{ id }}{{ else }}{{ ../user.id }}{{/if }}">{{ user }}</a></th>
+          {{/each }}
+        </tr>
+      </thead>
+      <tbody>
+        {{#each table }}    
+        <tr data-mid="{{ header.id }}">
+          {{#with header }}
+          <td class="grid-header">{{ date }}</td>
+          <td class="grid-header flag {{ country }}"><span class="league">{{ league }}</span></td>
+          <td class="grid-header"><a href="/matches/{{ id }}">{{ fixture }}</a> {{#if gotw }}(GotW){{/if}}</td>
+          <td class="grid-header">{{ result }}</td>
+          {{/with }}
+          {{#each preds }}
+            {{#if ../../expired }} {{!-- if deadline reached, show the predictions and scores, regardless of user --}}
+                <td class="pts{{ points }} {{#if joker}}joker{{/if }}">{{ pred }}</td>
+            {{ else }} {{!-- deadline not reached, so show form if logged in user --}}
+              {{#if @first }}{{!-- first here is first column, i.e. the logged in user's predictions --}}
+                <td><input class="score" data-mid="{{#if match_id }}{{ match_id }}{{ else }}{{ ../header.id }}{{/if }}" data-pid="{{ id }}" placeholder="X-X" pattern="\d{1,2}-\d{1,2}" maxlength="5" type="text" value="{{ pred }}" />
+                {{#unless @../first }} {{!-- first here refers to the *row*, so the gotw --}}
+                  <input type="radio" name="joker" data-mid="{{#if match_id }}{{ match_id }}{{ else }}{{ ../header.id }}{{/if }}" {{#if joker }}checked="checked"{{/if}} value="{{ ../header.id }}" />
+                {{/unless }}
+                </td>
+              {{ else }} {{!-- not first column, and not expired, so don't show --}}
+                <td>?-?</td>
+              {{/if }}
+            {{/if }}
+          {{/each }}
+        </tr>
+        {{/each }}
+      </tbody>
+      <tfoot>
+        <tr style="font-weight: bold;">
+          <td>&nbsp;</td><td>&nbsp;</td>
+          <th>Total Goals</th>
+          <td>{{ totals }}</td>
+          {{#each players }}
+          {{#if ../expired }}
+          <td class="{{#if closest }}pts1{{/if }}">{{ total }}</td>
+          {{ else }}
+          <td>&nbsp;</td>
+          {{/if }}
+          {{/each }}
+        </tr>
+        <tr style="font-weight: bold;">
+          <td>&nbsp;</td><td>&nbsp;</td>
+          <th>Total Points</th>
+          <td>&nbsp;</td>
+          {{#each players }}
+          {{#if ../expired }}
+          <td>{{ points }}</td>
+          {{ else }}
+          <td>&nbsp;</td>
+          {{/if }}
+          {{/each }}
+        </tr>
+      </tfoot>
+    </table>
+
+</section>

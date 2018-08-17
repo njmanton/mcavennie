@@ -1,0 +1,24 @@
+<section>
+  <h2><span class="flag-icon flag-icon-{{ team.country }}"></span> {{ team.name }}</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="column">Week <small>(date)</small></th>
+        <th scope="column">League</th>
+        <th scope="column">Opponent</th>
+        <th scope="column">Result</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each matches }}
+      <tr>
+        <td><a href="/weeks/{{ week }}">{{ week }} <small>({{ date }})</small></a></td>
+        <td><span class="flag-icon flag-icon-{{ league.country }}"></span> <a href="/leagues/{{ league.id }}">{{ league.name }}</a></td>
+        <td><span class="flag-icon flag-icon-{{ opponent.country }}"></span> <a href="/teams/{{ opponent.id }}">{{ opponent.name }}</a></td>
+        <td>{{ result }}</td>
+      </tr>
+      {{/each }}
+    </tbody>
+  </table>
+
+</section>

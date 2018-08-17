@@ -1,0 +1,19 @@
+<section>
+  <h3>Leagues</h3>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="column">League</th>
+        <th scope="column">Matches</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each leagues }}
+      <tr>
+        <th scope="row"><span class="flag-icon flag-icon-{{ country }}"></span> <a href="/leagues/{{ id }}">{{ name }}</a></th>
+        <td>{{ cnt }}</td>
+      </tr>
+      {{/each }}
+    </tbody>
+  </table>
+</section>

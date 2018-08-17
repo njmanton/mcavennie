@@ -1,0 +1,43 @@
+<section>
+  <table id="grid" style="width: 100%;" class="bet-grid table-responsive table-striped">
+    <thead>
+      <th class="betdate grid-header">Date</th>
+      <th class="grid-header">Match</th>
+      <th class="grid-header">Winner</th>
+      <th class="grid-header">Return</th>
+      {{#each players }}
+      <th style="min-width: 160px;">
+        <div class="players">
+          <a href="/users/{{ id }}">{{ username }}</a>
+        </div>
+      </th>
+      {{/each }}
+    </thead>
+    <tbody>
+      {{#each table }}
+      <tr>
+        {{#with header }}
+        <td class="grid-header">{{ date }}</td>
+        <td class="grid-header">{{ fixture }}</td>
+        <td class="grid-header">{{ result }}</td>
+        <td class="grid-header">{{ return }}</td>
+        {{/with }}
+
+        {{#each bets }}
+        <td class="player">
+          {{#if this }}
+          <div class="bet-cell {{#if win }}win{{/if }}">
+            <span>{{ prediction }}</span>
+            <span>{{#if ../../expired }}{{ outcome }}{{ else }}-{{ amount }}{{/if }}</span>
+          </div>
+          {{ else }}
+          &nbsp;
+          {{/if }}
+        </td>
+        {{/each }}
+      </tr>
+      {{/each }}
+    </tbody>
+  </table>
+  {{# unless expired }}<a href="/bets/{{ week }}/edit" class="btn btn-primary">Edit Bets</a>{{/unless }} 
+</section>

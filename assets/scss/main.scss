@@ -1,0 +1,31 @@
+@import url(https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css);
+@import url(/assets/flags/css/flag-icon.min.css);
+
+// prediction colours
+$cd: #ff0; // correct goal difference
+$cs: #0f0; // correct score
+$cr: #66f; // correct result
+$wj: #f66; // wrong result on joker
+
+@import '_tables';
+@import '_forms';
+
+@keyframes fin {
+  from {background-color: #7f7;}
+  to {background-color: #e8e8e8;}
+}
+
+@-webkit-keyframes fin {
+  from {background-color: #7f7;}
+  to {background-color: #e8e8e8;}
+}
+
+.ajaxChange {
+  animation-name: fin;
+  animation-duration: 2s;
+  -webkit-animation-name: fin;
+  -webkit-animation-duration: 2s;
+}
+
+/* last */
+@import '_media';

@@ -1,0 +1,50 @@
+  <form action="/matches/{{#if edit }}edit{{ else }}add{{/if }}/" method="post" id="addMatch">
+    <label for="addMatchHome">Home
+      <input data-fld="home" id="addMatchHome" name="home" type="text" value="{{ edit.TeamA.name }}" />
+    </label>
+
+    <label for="addMatchAway">Away
+      <input data-fld="away" id="addMatchAway" name="away" type="text" value="{{ edit.TeamB.name }}" />
+    </label>
+    <label for="addMatchLeague">League
+      <input id="addMatchLeague" name="league" type="text" value="{{ edit.league.name }}" />
+    </label>
+    <label for="addMatchDate">Date:
+      <select name="date" id="addMatchDate">
+        {{#each dates }}
+        <option value="{{ id }}">{{ date }}</option>
+        {{/each }}
+      </select>
+    </label>
+
+    <label for="gm-check">Goalmine:
+      <input type="checkbox" name="goalmine" {{#if edit.game.goalmine }}checked="checked"{{/if }} id="gm-check" {{#if goalmine }}disabled="true"{{/if }} />
+    </label>
+    <label for="tp-check">Tipping:
+      <input type="checkbox" name="tipping" {{#if edit.game.tipping }}checked="checked"{{/if }} id="tp-check" />
+    </label>
+
+    <label for="addMatchGotw">GotW
+      <input type="checkbox" name="gotw" id="addMatchGotw" {{#if gotw }}disabled="disabled"{{/if }} />
+    </label>
+
+    <fieldset>
+      <label for="addMatchOdds1">Home Odds
+        <input name="odds1" id="addMatchOdds1" {{#unless edit.game.tipping }}disabled="disabled"{{/unless }} type="text" value="{{ edit.odds1 }}" />
+      </label>
+      <label for="addMatchOddsX">Draw Odds
+        <input name="oddsX" id="addMatchOddsX" {{#unless edit.game.tipping }}disabled="disabled"{{/unless }} type="text" value="{{ edit.oddsX }}" />
+      </label>
+      <label for="addMatchOdds2">Away Odds
+        <input name="odds2" id="addMatchOdds2" {{#unless edit.game.tipping }}disabled="disabled"{{/unless }} type="text" value="{{ edit.odds2 }}" />
+      </label>
+    </fieldset>
+
+    <input type="hidden" id="addMatchHomeId" name="homeId" value="{{ edit.TeamA.id }}" />
+    <input type="hidden" id="addMatchAwayId" name="awayId" value="{{ edit.TeamB.id }}" />
+    <input type="hidden" id="addMatchLeagueId" name="leagueId" value="{{ edit.league.id }}" />
+    <input type="hidden" id="addMatchWeek" name="week" value="{{ week }}" />
+    <input type="hidden" id="editMatchMid" name="mid" value="{{ edit.id }}">
+      
+    <input type="submit" class="btn" id="addMatchSubmit" value="Save" disabled="disabled" />
+  </form>

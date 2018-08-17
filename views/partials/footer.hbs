@@ -1,0 +1,30 @@
+<footer role="navigation">
+Goalmine {{ pkg.version }} ({{ pkg.name }})
+<h3>Information</h3>
+<ul>
+  <li><a href="/pages/general">general</a></li>
+  <li><a href="/pages/goalmine">goalmine</a></li>
+  <li><a href="/pages/tipping">tipping</a></li>
+  <li><a href="/pages/killer">killer</a></li>
+</ul>
+<h3>Data</h3>
+<ul>
+  <li><a href="/standings/">standings</a></li>
+  <li><a href="/weeks/">weeks</a></li>
+  <li><a href="/matches/">matches</a></li>
+  <li><a href="/teams/">teams</a></li>
+  <li><a href="/leagues/">leagues</a></li>
+</ul>
+</footer>
+
+{{!-- common script srcs --}}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+<script src="/js/main.js"></script>
+
+{{!-- user loaded scripts from template --}}
+{{#each scripts }}
+<script src="{{ this }}"></script>
+{{/each }}

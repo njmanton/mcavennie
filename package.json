@@ -1,0 +1,54 @@
+{
+  "name": "mcavennie",
+  "version": "10.0.0",
+  "description": "node goalmine",
+  "main": "server.js",
+  "engines": {
+    "node": "8.9.4"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/njmanton/mcavennie.git"
+  },
+  "keywords": [
+    "goalmine",
+    "football",
+    "soccer",
+    "predictions"
+  ],
+  "author": "Nick Manton",
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.15.0",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.1",
+    "express": "^4.16.3",
+    "express-controller": "^0.3.2",
+    "express-handlebars": "^3.0.0",
+    "express-session": "^1.13.0",
+    "flag-icon-css": "^3.0.0",
+    "group-array": "^0.3.0",
+    "lodash": "^4.17.10",
+    "mailgun-js": "^0.20.0",
+    "marked": "^0.3.6",
+    "mysql2": "^1.6.1",
+    "node-emoji": "^1.8.1",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
+    "sequelize": "^4.38.0",
+    "winston": "^2.3.1"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^5.2.0",
+    "supertest": "^3.1.0"
+  },
+  "bugs": {
+    "url": "https://github.com/njmanton/mcavennie/issues"
+  },
+  "homepage": "https://github.com/njmanton/mcavennie#readme"
+}

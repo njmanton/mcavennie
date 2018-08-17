@@ -1,0 +1,62 @@
+<section>
+  <h3>Edit Bets</h3>
+  <form action="/bets/edit" method="post" id="betEdit">
+    <input type="hidden" name="week" id="addEditWeek" value="{{ week }}">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>&nbsp;</th>
+          <th role="col">Fixture</th>
+          <th role="col">Date</th>
+          <th role="col">Home/Draw/Away</th>
+          <th role="col">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each data }}
+        <tr>
+          <td role="row">
+            <input type="checkbox" name="bets[{{ id }}][mid]" value="{{ id }}" {{#if bets.amount }}checked="checked"{{/if }} />
+          </td>
+          <td>{{ TeamA.name }} v {{ TeamB.name }}</td>
+          <td>{{ fdate }}</td>
+          <td>
+            <div class="btn-group" data-toggle="buttons">
+              <label data-odds="{{ odds1 }}" class="btn btn-odds btn-primary {{#if prediction.odds1 }}active{{/if }}">{{ odds1 }}
+                <input type="radio" name="bets[{{ id }}][prediction]" value="1" autocomplete="off" {{#if prediction.odds1 }}checked{{/if }} />
+              </label>
+              <label data-odds="{{ oddsX }}" class="btn btn-odds btn-primary {{#if prediction.oddsX }}active{{/if }}">{{ oddsX }}
+                <input type="radio" name="bets[{{ id }}][prediction]" value="X" autocomplete="off" {{#if prediction.oddsX }}checked{{/if }} />
+              </label>
+              <label data-odds="{{ odds2 }}" class="btn btn-odds btn-primary {{#if prediction.odds2 }}active{{/if }}">{{ odds2 }}
+                <input type="radio" name="bets[{{ id }}][prediction]" value="2" autocomplete="off" {{#if prediction.odds2 }}checked{{/if }} />
+              </label>
+            </div>
+          </td>
+          <td>
+            <input type="text" step="5" min="20" max="60" name="bets[{{ id }}][amount]" value="{{ bets.amount }}" /><span class="amt_err">&nbsp;</span>
+            <input type="hidden" name="bets[{{ id }}][pid]" value="{{ bets.id }}" />
+            <input type="hidden" name="bets[{{ id }}][status]" value="" />
+          </td>
+        </tr>
+        {{/each }}
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3">&nbsp;</td>
+          <td>Matches: <span id="matchcnt"></span></td>
+          <td>Total: £<span id="totalamt"></span></td>
+        </tr>
+        <tr>
+          <td colspan="4">&nbsp;</td>
+          <td>Max. Return: £<span id="totalret"></span></td>
+        </tr>
+        <tr>
+          <td colspan="3"></td>
+          <td><span id="matches"></span></td>
+        </tr>
+      </tfoot>
+    </table>
+    <input type="submit" name="submit" id="betEditSubmit" class="btn btn-success" disabled="disabled" value="submit" />
+  </form>
+</section>

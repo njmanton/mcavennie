@@ -1,0 +1,81 @@
+<section>
+  <h3>{{#if edit }}Edit{{ else }}Add{{/if }} Post</h3>
+
+  <form action="/posts/{{#if edit }}edit{{ else }}add{{/if }}" method="post">
+    <fieldset class="form-group">
+      <p>Add a new post to appear on the main page. Posts are ordered in date order (latest first), and 'sticky' posts will always be placed at the top. You can use <a data-toggle="collapse" href="#mdExamples" aria-expanded="false" aria-controls="mdExamples">markdown and emoji</a> to format text. Examples: </p>
+      <aside class="collapse" id="mdExamples">
+        <table>
+          <thead>
+            <tr>
+              <th>Type:</th>
+              <th>To get:</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th><kbd>#, ## etc <i>header</i></kbd></th>
+              <td><samp><b>Headers</b></samp></td>
+            </tr>
+            <tr>
+              <th><kbd>_italics_</kbd></th>
+              <td><samp><em>italics</em></samp></td>
+            </tr>
+            <tr>
+              <th><kbd>**bold**</kbd></th>
+              <td><samp><strong>bold</strong></samp></td>
+            </tr>
+            <tr>
+              <th><kbd>~~strikethrough~~</kbd></th>
+              <td><samp><del>strikethrough</del></samp></td>
+            </tr>
+            <tr>
+              <th><kbd>- item</kbd></th>
+              <td><ul><li>item</li></ul></td>
+            </tr>
+            <tr>
+              <th><kbd>---</kbd></th>
+              <td><hr /></td>
+            </tr>
+            <tr>
+              <th><kbd>[link](http://google.com)</kbd></th>
+              <td><samp><a href="https://google.com/">link</a></samp></td>
+            </tr>
+            <tr>
+              <th><kbd>:soccer: :heart: :flag-br: etc.</kbd></th>
+              <td><samp>⚽️ ❤️ 🇧🇷</samp> see full <a target="_blank" href="https://raw.githubusercontent.com/omnidan/node-emoji/master/lib/emoji.json">list</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </aside>
+      <input class="form-control" required placeholder="Post title (required)" type="text" id="postAddTitle" name="title" value="{{ data.title }}" />
+      <ul class="nav nav-pills" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" data-toggle="tab" href="#write" role="tab">Write</a>
+        </li>
+        <li class="nav-item">
+          <a id="postPreview" class="nav-link" data-toggle="tab" href="#preview" role="tab">Preview</a>
+        </li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane active" id="write" role="tabpanel">
+          <textarea class="form-control" placeholder="Your message here. Use _markdown_ codes for formatting." name="body" id="postAddBody" cols="30" rows="10">{{ data.body }}</textarea>    
+        </div>
+        <div class="tab-pane" id="preview" role="tabpanel">
+          <div id="postPreviewPane" cols="30" rows="10"></span> 
+        </div>
+      </div>
+      <div class="form-check form-check-inline">
+        <label class="form-check-label" for="PostSticky">
+        <input type="checkbox" class="form-check-input" name="sticky" id="postAddSticky" value="1" /> Sticky
+        </label>
+      </div>
+      <input type="hidden" name="author" value="{{ data.author_id }} /">
+      <input type="hidden" name="id" value="{{ data.id }}">
+      <input type="submit" class="form-control btn btn-info" value="{{#if edit }}Edit{{ else }}Save{{/if }} Post" />
+      {{#if edit }}
+      <input type="button" class="btn btn-danger" data-delete-post data-pid="{{ data.id }}" value="Delete" />
+      {{/if }}
+    </fieldset>
+  </form>
+</section>

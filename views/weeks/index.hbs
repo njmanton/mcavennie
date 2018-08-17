@@ -1,0 +1,25 @@
+<section>
+  <h3>Weeks</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Week</th>
+        <th>Dates</th>
+        <th>Status</th>
+        <th>Predictions</th>
+        <th>Bets</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each data }}
+      <tr>
+        <td><a href="/weeks/{{ id }}">{{ id }}</a></td>
+        <td>{{ start }}-{{ end }}</td>
+        <td>{{ label }}</td>
+        <td><a href="/predictions/{{ id }}">View</a></td>
+        <td><a href="/bets/{{ id }}">View</a></td>
+      </tr>
+      {{/each }}
+    </tbody>
+  </table>
+</section>

@@ -1,0 +1,23 @@
+<section>
+  <h3>Admin screen</h3>
+  <table class="table" id="adminMatches">
+    <thead>
+      <tr>
+        <th>Week</th>
+        <th>Fixture</th>
+        <th>League</th>
+        <th>Result</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each outstanding }}
+      <tr>
+        <td>{{ week_id }}</td>
+        <td>{{ TeamA.name }} v {{ TeamB.name }}</td>
+        <td><span class="flag-icon flag-icon-{{ league.country }}"></span> {{ league.name }}</td>
+        <td><input type="text" placeholder="X-X" data-mid="{{ id }}" /></td>
+      </tr>
+      {{/each }}
+    </tbody>
+  </table>
+</section>
