@@ -49,28 +49,35 @@ const routes = app => {
 
   });
 
-  app.get('/money/:uid', utils.isAuthenticated, (req, res) => {
-    if (req.user && (req.params.uid == 0 || req.user.admin || req.user.id == req.params.uid)) {
-      models.Ledger.view(req.params.uid).then(data => {
-        if (!data) {
-          res.status(404).render('errors/404');
-        } else {
-          res.render('ledgers/view', {
-            title: `Ledger for ${ data.username }`,
-            data: data.rows
-          });
-        }
+  app.get('/money/:uid', utils.isAuthenticated, async (req, res) => {
 
-      });
+    if (req.user && (req.params.uid == 0 || req.user.admin || req.user.id == req.params.uid)) {
+      const ledger = await models.Ledger.view(req.params.uid);
+
+      if (!ledger) {
+        res.status(404).render('errors/404');
+      } else {
+        res.render('ledgers/view', {
+          title: `Ledger for ${ ledger.username }`,
+          username: ledger.username,
+          data: ledger.rows,
+          debug: JSON.stringify(ledger, null, 2)
+        });
+      }
     } else {
       res.sendStatus(403);
     }
   });
 
-  app.get('/pot', utils.isAjax, (req, res) => {
-    models.Ledger.balance(0).then(pot => {
+  app.get('/pot', utils.isAjax, async (req, res) => {
+
+    try {
+      const pot = await models.Ledger.balance(0);
       res.status(200).send(pot.toLocaleString('en-GB', { style: 'currency', currency: 'GBP' }));
-    });
+    } catch (e) {
+      res.sendStatus(500);
+    }
+
   });
 
   // login
@@ -95,6 +102,7 @@ const routes = app => {
       });
     } catch (e) {
       logger.error(e);
+      res.render('/');
     }
   });
 

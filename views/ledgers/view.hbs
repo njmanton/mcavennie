@@ -1,0 +1,26 @@
+<section>
+  <h3>Ledger for {{ username }}</h3>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Description</th>
+        <th>Amount</th>
+        <th>Balance</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each data }}
+      <tr>
+        <td>{{ date }}</td>
+        <td>{{ description }}</td>
+        <td><span class="{{#if negamt }}neg{{/if }}">{{ amount }}</span></td>
+        <td><span class="{{#if negbalance }}neg{{/if }}">{{ balance }}</span></td>
+      </tr>
+      {{/each }}
+    </tbody>
+  </table>
+</section>
+<style>
+  span.neg { color: red }
+</style>

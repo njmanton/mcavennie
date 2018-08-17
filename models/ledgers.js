@@ -28,26 +28,30 @@ const Ledger = (sequelize, DataTypes) => {
     }
   });
 
+  // view the ledger entries for a given player
   model.view = async uid => {
     const models = require('.');
 
+    let promises = [];
     try {
-      const ledgers = await models.Ledger.findAll({
-        where: { user_id: uid, updatedAt: { [Op.gte]: '2017-08-01' } },
-        attributes: ['id', 'description', 'amount'],
-        include: {
-          model: models.User,
-          attributes: ['id', 'username']
-        }
-      });
-      if (ledgers.length == 0) return null;
 
-      const username = uid == 0 ? 'Pot' : ledgers[0].user.username;
+      promises.push(models.Ledger.findAll({
+        where: { user_id: uid, updatedAt: { [Op.gte]: '2017-08-01' } },
+        attributes: ['id', 'description', 'amount', 'updatedAt'],
+        raw: true
+      }));
+      promises.push(models.User.findById(uid, {
+        attributes: ['username', 'id']
+      }));
+
+      let [ledgers, user] = await Promise.all(promises);
+      const username = uid == 0 ? 'Pot' : user.username;
+
       let running = 0;
       ledgers.map(ledger => {
         ledger.date = moment(ledger.updatedAt).format('ddd DD MMM');
-        ledger.balance = (ledger.amount + running);
-        running += ledger.amount;
+        ledger.balance = +ledger.amount + running;
+        running += +ledger.amount;
         ledger.negbalance = ledger.balance < 0;
         ledger.negamt = ledger.amount < 0;
         ledger.balance = ledger.balance.toLocaleString('en-GB', { style: 'currency', currency: 'GBP'});
@@ -69,19 +73,15 @@ const Ledger = (sequelize, DataTypes) => {
     const models = require('.');
 
     try {
-
       const rows = await models.Ledger.findAll({
         where: { user_id: uid, updatedAt: { [Op.gte]: '2018-08-01'} },
         attributes: ['amount']
       });
       return rows.map(el => el.amount).reduce((sum, value) => sum + value, 0);
-
     } catch (e) {
       logger.error(`could not get ledger balance for user ${ uid } (${ e })`);
       return null;
     }
-
-
 
   };
 
