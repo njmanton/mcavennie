@@ -83,7 +83,7 @@ models.sequelize.sync().then( () => {
   console.log('Sequelize initialised at', moment().format('HH:mm:ss ddd'));
   const server = app.listen(app.get('port'), () => {
     console.log(pkg.name, 'running on port', server.address().port);
-    if (process.env.NODE_DEV == 'prod') logger.info('server started');
+    if (process.env.NODE_ENV == 'prod') logger.info('server started');
     module.exports = server;
   });
 });
