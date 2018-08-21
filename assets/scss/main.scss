@@ -1,5 +1,5 @@
-@import url(https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css);
-@import url(/assets/flags/css/flag-icon.min.css);
+@import url('https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css');
+@import url('/assets/flags/css/flag-icon.min.css');
 
 // prediction colours
 $cd: #ff0; // correct goal difference
@@ -7,17 +7,36 @@ $cs: #0f0; // correct score
 $cr: #66f; // correct result
 $wj: #f66; // wrong result on joker
 
+// block colours
+$dark-bg: #222;
+$dark-fg: #dedede;
+
+// dynamic colours
+$flash-hilite: #7f7;
+
+// import component-specific styles
 @import '_tables';
 @import '_forms';
 
+// main structural tags
+nav, footer {
+  background-color: $dark-bg;
+  color: $dark-fg;
+}
+
 @keyframes fin {
-  from {background-color: #7f7;}
-  to {background-color: #e8e8e8;}
+  from {
+    background-color: $flash-hilite;
+  }
+
+  to {
+    background-color: $dark-fg;
+  }
 }
 
 @-webkit-keyframes fin {
-  from {background-color: #7f7;}
-  to {background-color: #e8e8e8;}
+  from {background-color: $flash-hilite; }
+  to {background-color: $dark-fg;}
 }
 
 .ajaxChange {
@@ -27,5 +46,5 @@ $wj: #f66; // wrong result on joker
   -webkit-animation-duration: 2s;
 }
 
-/* last */
+// last
 @import '_media';
