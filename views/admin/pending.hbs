@@ -1,5 +1,5 @@
 <section>
-  <h3>Admin screen</h3>
+  <h3>Match results</h3>
   <table class="table" id="adminMatches">
     <thead>
       <tr>
@@ -15,7 +15,7 @@
         <td>{{ week_id }}</td>
         <td>{{ TeamA.name }} v {{ TeamB.name }}</td>
         <td><span class="flag-icon flag-icon-{{ league.country }}"></span> {{ league.name }}</td>
-        <td><input type="text" placeholder="X-X" data-mid="{{ id }}" /></td>
+        <td><input class="score" type="text" placeholder="X-X" data-mid="{{ id }}" /></td>
       </tr>
       {{/each }}
     </tbody>

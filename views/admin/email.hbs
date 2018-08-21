@@ -1,0 +1,70 @@
+<section>
+  <h4>Send email</h4>
+  <form action="/admin/email" method="post">
+    <fieldset class="form-group">
+      <p>Send a new bulk email to tipping players at <code>tipping-players@goalmine.eu</code>. You can use <a data-toggle="collapse" href="#mdExamples" aria-expanded="false" aria-controls="mdExamples">markdown and emoji</a> to format text. Examples: </p>
+      <aside class="collapse" id="mdExamples">
+        <table>
+          <thead>
+            <tr>
+              <th>Type:</th>
+              <th>To get:</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th><kbd>#, ## etc <i>header</i></kbd></th>
+              <td><samp><b>Headers</b></samp></td>
+            </tr>
+            <tr>
+              <th><kbd>_italics_</kbd></th>
+              <td><samp><em>italics</em></samp></td>
+            </tr>
+            <tr>
+              <th><kbd>**bold**</kbd></th>
+              <td><samp><strong>bold</strong></samp></td>
+            </tr>
+            <tr>
+              <th><kbd>~~strikethrough~~</kbd></th>
+              <td><samp><del>strikethrough</del></samp></td>
+            </tr>
+            <tr>
+              <th><kbd>- item</kbd></th>
+              <td><ul><li>item</li></ul></td>
+            </tr>
+            <tr>
+              <th><kbd>---</kbd></th>
+              <td><hr /></td>
+            </tr>
+            <tr>
+              <th><kbd>[link](http://google.com)</kbd></th>
+              <td><samp><a href="https://google.com/">link</a></samp></td>
+            </tr>
+            <tr>
+              <th><kbd>:soccer: :heart: :flag-br: etc.</kbd></th>
+              <td><samp>⚽️ ❤️ 🇧🇷</samp> see full <a target="_blank" href="https://raw.githubusercontent.com/omnidan/node-emoji/master/lib/emoji.json">list</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </aside>
+      <input class="form-control" required placeholder="Subject (required)" type="text" id="adminMailSubject" name="subject" />
+      <ul class="nav nav-pills" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" data-toggle="tab" href="#write" role="tab">Write</a>
+        </li>
+        <li class="nav-item">
+          <a id="sendPreview" class="nav-link" data-toggle="tab" href="#preview" role="tab">Preview</a>
+        </li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane active" id="write" role="tabpanel">
+          <textarea class="form-control" placeholder="Your message here. Use _markdown_ codes for formatting." name="body" id="adminMailBody" cols="30" rows="10">{{ data.body }}</textarea>    
+        </div>
+        <div class="tab-pane" id="preview" role="tabpanel">
+          <div id="sendPreviewPane" cols="30" rows="10"></span> 
+        </div>
+      </div>
+      <input type="submit" class="form-control btn btn-info" value="Send email" />
+    </fieldset>
+  </form>
+</section>

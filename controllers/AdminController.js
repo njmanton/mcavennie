@@ -2,16 +2,21 @@
 
 const models  = require('../models'),
       utils   = require('../utils'),
+      marked  = require('marked'),
+      emojify = require('node-emoji').emojify,
       logger  = require('winston'),
+      moment  = require('moment'),
+      mail    = require('../mail'),
       folder  = 'admin';
 
 const controller = {
 
-  get_index: [utils.isAdmin, async (req, res) => {
+  // show all admin options
+  get_pending: [utils.isAdmin, async (req, res) => {
 
     try {
       const out = await models.Match.outstanding();
-      res.render(`${ folder }/index`, {
+      res.render(`${ folder }/pending`, {
         title: 'Goalmine Admin',
         outstanding: out,
         scripts: ['/js/admin.js'],
@@ -22,7 +27,14 @@ const controller = {
     }
   }],
 
-  post_match_update: [utils.isAjax, async (req, res) => {
+  get_email: [utils.isAdmin, (req, res) => {
+    res.render(`${ folder }/email`, {
+      title: 'Send bulk email'
+    })
+  }],
+
+  // handle a submitted match result
+  post_match_update: [utils.isAjax, utils.isAdmin, async (req, res) => {
 
     const usr = req.user ? req.user.username : 'test',
           mid = req.body.mid,
@@ -96,6 +108,35 @@ const controller = {
     } catch (e) {
       logger.error(`error updating match ${ mid } result (${ e.message })`);
       res.send({ updated: false, msg: e.message });
+    }
+
+  }],
+
+  // handle a bulk email
+  post_email: [utils.isAdmin, async (req, res) => {
+
+    try {
+      if (!req.body.subject || !req.body.body) throw new Error('missing params');
+
+      const template = 'bulk_email.hbs',
+            email = 'goalmine-test@goalmine.eu', // TODO replace
+            now = moment().format('YYYY-MM-DD'),
+            context = {
+              from: req.user ? req.user.username : 'Admin',
+              body: marked(emojify(req.body.body)),
+              date: now
+            };
+
+      mail.send(email, null, req.body.subject, template, context, resp => {
+        //console.log(resp);
+        res.send(resp);
+      });
+      req.flash('success', 'email has been sent');
+    } catch (e) {
+      logger.error(`error sending bulk email (${ e.message })`);
+      req.flash('error', e.message);
+    } finally {
+      res.redirect('/admin/');
     }
 
   }]
