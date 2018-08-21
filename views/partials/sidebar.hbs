@@ -1,0 +1,45 @@
+<nav>
+  <section class="sidebar-header">
+    {{#if user.image}}<img src="{{ user.image }}" />{{/if }}
+    {{#if user }}
+    {{ user.username }} 
+    {{#if user.admin }}
+    <span class="badge badge-warning">admin</span> 
+    {{/if }}  
+    <br>
+    <a href="/logout">logout</a>
+    {{ else }}
+    <br>
+    <a href="/login">login</a>
+    {{/if }}    
+  </section>
+
+  {{#if user.goalmine }}
+  <section>
+    <a href="/predictions/602">Week 602</a>
+  </section>
+  {{/if }}
+
+  {{#if user.tipping }}
+  <section>
+    <a href="/bets/602">Week 602</a>
+  </section>
+  {{/if }}
+
+  {{#if user.killer }}
+  <section>
+    <a href="/killers/2">Killer game 2</a>
+  </section>
+  {{/if }}
+
+  {{#if user.admin }}
+  <section>
+    <ul>
+      <li>{{#if pending }}<a href="/admin/pending">Pending matches</a>{{ else }}No matches pending{{/if }}</li>
+      <li><a href="/admin/email">Send bulk email</a></li>
+      <li><a href="/killers/add">Add new killer game</a></li>
+    </ul>
+  </section>
+  {{/if }}
+
+</nav>
