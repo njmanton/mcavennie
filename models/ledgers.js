@@ -68,7 +68,7 @@ const Ledger = (sequelize, DataTypes) => {
 
   };
 
-  // get the total blaance for a given player
+  // get the total balance for a given player
   model.balance = async uid => {
     const models = require('.');
 
