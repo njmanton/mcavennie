@@ -3,8 +3,8 @@
 const Place = (sequelize, DataTypes) => {
 
   const logger   = require('winston'),
+        Op       = require('sequelize').Op,
         config   = require('../utils/config');
-
 
   const model = sequelize.define('places', {
     id: {
@@ -183,6 +183,32 @@ const Place = (sequelize, DataTypes) => {
 
     });
     return curr;
+  };
+
+  // get the total balance and rank for given player
+  model.balance = async uid => {
+    const models = require('.');
+
+    try {
+      const week = await models.Week.current();
+      let promises = [];
+
+      promises.push(models.Place.findOne({
+        where: { week_id: { [Op.gte]: config.goalmine.start_week }, user_id: uid },
+        attributes: [[models.sequelize.fn('SUM', models.sequelize.col('balance')), 'tot']],
+        group: ['user_id'],
+        raw: true
+      }));
+      promises.push(models.Place.findOne({
+        where: { user_id: uid, week_id: week.id },
+        attributes: ['rank']
+      }));
+      const [b, r] = await Promise.all(promises);
+      return { balance: +b.tot, rank: r.rank };
+    } catch (e) {
+      logger.error(e);
+      return {};
+    }
   };
 
   return model;
