@@ -198,6 +198,21 @@ const Standing = (sequelize, DataTypes) => {
 
   };
 
+  // get the running total and current rank for given player
+  model.balance = async uid => {
+    const models = require('.');
+
+    try {
+      const week = await models.Week.current();
+      const table = await models.Standing.overall(uid, week.id, false);
+      return table.filter(ele => ele.id == uid)[0];
+
+    } catch (e) {
+     return null;
+    }
+
+  };
+
   return model;
 };
 

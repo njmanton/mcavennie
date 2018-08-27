@@ -198,6 +198,37 @@ const Prediction = (sequelize, DataTypes) => {
 
   };
 
+  // get the number of predictions made on current week for given player
+  model.predCount = async uid => {
+
+    const models = require('.');
+
+    try {
+      const week = await models.Week.current();
+
+      const sql = `SELECT 
+        M.week_id,
+        count(P.pred) AS preds,
+        sum(P.joker) AS joker
+        FROM predictions P
+        JOIN matches M ON M.id = P.match_id AND P.user_id = :uid
+        WHERE M.week_id >= :week
+        GROUP BY week_id`;
+      const preds = await models.sequelize.query(sql, {
+        replacements: {
+          week: week.id,
+          uid: uid },
+        type: sequelize.QueryTypes.SELECT
+      });
+
+      return _.groupBy(preds, 'week_id');
+
+    } catch (e) {
+      return null;
+    }
+
+  };
+
   return model;
 
 };
