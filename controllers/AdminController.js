@@ -30,7 +30,7 @@ const controller = {
   get_email: [utils.isAdmin, (req, res) => {
     res.render(`${ folder }/email`, {
       title: 'Send bulk email'
-    })
+    });
   }],
 
   // handle a submitted match result
