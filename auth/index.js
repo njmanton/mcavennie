@@ -46,9 +46,19 @@ module.exports = app => {
   ));
 
   // make user object available in handlebars views
-  app.use((req, res, next) => {
+  app.use( async (req, res, next) => {
     if (!res.locals.user && req.user) {
       res.locals.user = req.user;
+      res.locals.user.goalmine = (req.user.games & 1) != 0;
+      res.locals.user.tipping = (req.user.games & 2) != 0;
+      res.locals.user.killer = (req.user.games & 4) != 0;
+
+      res.locals.user.balance = {
+        ledger: await models.Ledger.balance(req.user.id),
+        goalmine: await models.Standing.balance(req.user.id),
+        tipping: await models.Place.balance(req.user.id)
+      };
+
     }
     next();
   });
