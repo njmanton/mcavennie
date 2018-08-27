@@ -8,7 +8,7 @@ const points = {
   win: 5,
   correct_difference: 3,
   correct_result: 1,
-  joker_penalty: -1
+  joker_penalty: 0
 };
 
 const validScore = score => {
