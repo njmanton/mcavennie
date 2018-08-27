@@ -88,6 +88,7 @@ const Week = (sequelize, DataTypes) => {
 
   };
 
+  // current week is the earliest week that hasn't been finalised
   model.current = async () => {
 
     const models = require('.');
@@ -101,7 +102,8 @@ const Week = (sequelize, DataTypes) => {
       });
       return week;
     } catch (e) {
-      return e;
+      logger.error('could not retrieve current week');
+      return null;
     }
 
   };
