@@ -8,6 +8,7 @@ $cr: #66f; // correct result
 $wj: #f66; // wrong result on joker
 
 // block colours
+$bg: #fff;
 $dark-bg: #222;
 $dark-fg: #dedede;
 
@@ -18,10 +19,35 @@ $flash-hilite: #7f7;
 @import '_tables';
 @import '_forms';
 
+
 // main structural tags
-nav, footer {
+#sidebar {
   background-color: $dark-bg;
   color: $dark-fg;
+  margin-left: -250px;
+  max-width: 250px;
+  min-height: 100vh;
+  min-width: 250px;
+  text-align: center;
+  transition: all 0.3s;
+
+  &.active {
+    margin-left: 0;
+  }
+}
+
+.wrapper {
+  align-items: stretch;
+  display: flex;
+  //width: 100%;
+}
+
+footer {
+  p {
+    color: darken($bg, 10%);
+    font-size: 1.2rem;
+    text-align: center;
+  }
 }
 
 @keyframes fin {
@@ -40,10 +66,10 @@ nav, footer {
 }
 
 .ajaxChange {
-  animation-name: fin;
-  animation-duration: 2s;
-  -webkit-animation-name: fin;
   -webkit-animation-duration: 2s;
+  -webkit-animation-name: fin;
+  animation-duration: 2s;
+  animation-name: fin;
 }
 
 // last

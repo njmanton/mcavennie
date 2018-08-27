@@ -9,11 +9,16 @@ window.setTimeout(function() {
 
 $(function() {
 
+  $('#sidebarToggle').on('click', function() {
+    console.log('button');
+    $('#sidebar').toggleClass('active');
+  });
+
   $('#sendPreview').on('click', function() {
     $.post({
       url: '/posts/preview',
       data: {
-        body: $('#sendBody').val()
+        body: $('#adminMailBody').val()
       }
     }).done(function(res) {
       $('#sendPreviewPane').html(res);

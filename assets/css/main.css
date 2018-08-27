@@ -1,24 +1,58 @@
-@import url(https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css);
-@import url(/assets/flags/css/flag-icon.min.css);
-table {
-  color: blue; }
+@import url("https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css");
+@import url("/assets/flags/css/flag-icon.min.css");
+.pts1, .pts2 {
+  background-color: #66f; }
+
+.pts3, .pts6 {
+  background-color: #ff0; }
+
+.pts5, .pts10 {
+  background-color: #0f0; }
+
+input .score {
+  width: 3rem; }
+
+#sidebar {
+  background-color: #222;
+  color: #dedede;
+  margin-left: -250px;
+  max-width: 250px;
+  min-height: 100vh;
+  min-width: 250px;
+  text-align: center;
+  transition: all 0.3s; }
+  #sidebar.active {
+    margin-left: 0; }
+
+.wrapper {
+  align-items: stretch;
+  display: flex; }
+
+footer p {
+  color: #e6e6e6;
+  font-size: 1.2rem;
+  text-align: center; }
 
 @keyframes fin {
   from {
     background-color: #7f7; }
   to {
-    background-color: #e8e8e8; } }
+    background-color: #dedede; } }
 
 @-webkit-keyframes fin {
   from {
     background-color: #7f7; }
   to {
-    background-color: #e8e8e8; } }
+    background-color: #dedede; } }
 
 .ajaxChange {
-  animation-name: fin;
-  animation-duration: 2s;
+  -webkit-animation-duration: 2s;
   -webkit-animation-name: fin;
-  -webkit-animation-duration: 2s; }
+  animation-duration: 2s;
+  animation-name: fin; }
 
-/* last */
+@media (min-width: 768px) {
+  #sidebar {
+    margin-left: 0; }
+    #sidebar.active {
+      margin-left: -250px; } }

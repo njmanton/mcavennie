@@ -1,5 +1,6 @@
-<nav>
+<nav id="sidebar">
   <section class="sidebar-header">
+    <p><img src="/img/gm_logo.png" alt="Goalmine logo" height="140px" width="140px" /></p>
     {{#if user.image}}<img src="{{ user.image }}" />{{/if }}
     {{#if user }}
     {{ user.username }} 
@@ -14,26 +15,32 @@
     {{/if }}    
   </section>
 
+  <p>{{ user.balance.goalmine.rank }}</p>
+
   {{#if user.goalmine }}
   <section>
-    <a href="/predictions/602">Week 602</a>
+    <h5>Goalmine</h5>
+    <a href="/predictions/602">Wk 602</a>
   </section>
   {{/if }}
 
   {{#if user.tipping }}
   <section>
-    <a href="/bets/602">Week 602</a>
+    <h5>Tipping</h5>
+    <a href="/bets/602">Wk 602</a>
   </section>
   {{/if }}
 
   {{#if user.killer }}
   <section>
+    <h5>Killer</h5>
     <a href="/killers/2">Killer game 2</a>
   </section>
   {{/if }}
 
   {{#if user.admin }}
   <section>
+    <h5>Admin</h5>
     <ul>
       <li>{{#if pending }}<a href="/admin/pending">Pending matches</a>{{ else }}No matches pending{{/if }}</li>
       <li><a href="/admin/email">Send bulk email</a></li>

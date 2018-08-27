@@ -1,0 +1,20 @@
+// styling for table elements
+
+// goalmine points colors
+.pts1, .pts2 {
+  background-color: $cr;
+}
+
+.pts3, .pts6 {
+  background-color: $cd;
+}
+
+.pts5, .pts10 {
+  background-color: $cs;
+}
+
+input {
+  .score {
+    width: 3rem;
+  }
+}

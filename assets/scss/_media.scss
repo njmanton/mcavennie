@@ -1,0 +1,10 @@
+@media (min-width: 768px) {
+
+  #sidebar {
+    margin-left: 0;
+
+    &.active {
+      margin-left: -250px;
+    }
+  }
+}
