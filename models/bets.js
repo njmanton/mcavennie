@@ -196,42 +196,49 @@ const Bet = (sequelize, DataTypes) => {
   model.userBets = async uid => {
     const models = require('.');
 
-    const results = await models.Bet.findAll({
-      where: { user_id: uid },
-      attributes: ['outcome'],
-      include: [{
-        model: models.Match,
+    try {
+      const results = await models.Bet.findAll({
+        where: { user_id: uid },
+        attributes: ['outcome'],
         include: [{
-          model: models.Team,
-          as: 'TeamA',
-          attributes: ['name']
-        }, {
-          model: models.Team,
-          as: 'TeamB',
-          attributes: ['name']
-        }],
-        attributes: ['date', 'week_id'],
-        where: { week_id: { [Op.gte]: config.goalmine.league_start } },
-        order: [['date', 'asc']]
-      }]
-    });
-
-    let bets = [];
-    results.map(item => {
-      bets.push({
-        week: item.match.week_id,
-        fixture: `${ item.match.TeamA.name } v ${ item.match.TeamB.name }`,
-        outcome: item.outcome,
-        rolling: 0
+          model: models.Match,
+          include: [{
+            model: models.Team,
+            as: 'TeamA',
+            attributes: ['name']
+          }, {
+            model: models.Team,
+            as: 'TeamB',
+            attributes: ['name']
+          }],
+          attributes: ['date', 'week_id'],
+          where: { week_id: { [Op.gte]: config.goalmine.league_start } },
+          order: [['date', 'asc']]
+        }]
       });
-    });
 
-    let prev = 0;
-    bets.map(b => {
-      b.rolling = (prev + b.outcome);
-      prev = b.rolling;
-    });
-    return bets;
+      let bets = [];
+      results.map(item => {
+        bets.push({
+          week: item.match.week_id,
+          fixture: `${ item.match.TeamA.name } v ${ item.match.TeamB.name }`,
+          outcome: item.outcome,
+          rolling: 0
+        });
+      });
+
+      let prev = 0;
+      bets.map(b => {
+        b.rolling = (prev + b.outcome);
+        prev = b.rolling;
+      });
+      return bets;
+
+    } catch (e) {
+      logger.error(`error getting user bets (${ e.message })`);
+      return null;
+    }
+
 
   };
 
@@ -240,35 +247,42 @@ const Bet = (sequelize, DataTypes) => {
     const models = require('.');
     let promises = [];
 
-    for (var item in data) {
-      let bet = data[item];
-      let obj = {
-        user_id: uid,
-        match_id: bet.mid,
-        prediction: bet.prediction,
-        amount: bet.amount
-      };
-      // either destroy, update or create
-      if (bet.status == 'delete') {
-        // destroy
-        promises.push(models.Bet.destroy({
-          where: { id: bet.pid } }
-        ).catch(e => {
-          logger.error({ mid: bet.mid, err: e });
-        }));
-      } else {
-        if (bet.pid && bet.prediction && bet.mid && bet.amount) {
-          // update
-          promises.push(models.Bet.update(obj, { where: { id: bet.pid } }).catch(e => { logger.error(e); }));
-        } else if (bet.prediction && bet.mid && bet.amount) {
-          // create
-          promises.push(models.Bet.create(obj).catch(e => { logger.error(e); }));
+    try {
+      for (const item in data) {
+        const bet = data[item];
+        const obj = {
+          user_id: uid,
+          match_id: bet.mid,
+          prediction: bet.prediction,
+          amount: bet.amount
+        };
+        // either destroy, update or create
+        if (bet.status == 'delete') {
+          // destroy
+          promises.push(models.Bet.destroy({
+            where: { id: bet.pid } }
+          ).catch(e => {
+            logger.error({ mid: bet.mid, err: e });
+          }));
+        } else {
+          if (bet.pid && bet.prediction && bet.mid && bet.amount) {
+            // update
+            promises.push(models.Bet.update(obj, { where: { id: bet.pid } }).catch(e => { logger.error(e); }));
+          } else if (bet.prediction && bet.mid && bet.amount) {
+            // create
+            promises.push(models.Bet.create(obj).catch(e => { logger.error(e); }));
+          }
         }
       }
+
+      const ret = await Promise.all(promises);
+      return ret.reduce((a, b) => a + !!b, 0);
+
+    } catch (e) {
+      logger.error(`error in addEditBets (${ e.message })`);
+      return null;
     }
 
-    const ret = await Promise.all(promises);
-    return ret.reduce((a, b) => a + !!b, 0);
 
   };
 
