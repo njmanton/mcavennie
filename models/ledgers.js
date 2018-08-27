@@ -4,6 +4,7 @@ const Ledger = (sequelize, DataTypes) => {
 
   const Op      = require('sequelize').Op,
         moment  = require('moment'),
+        config  = require('../utils/config'),
         logger  = require('winston');
 
   const model = sequelize.define('ledgers', {
@@ -36,7 +37,7 @@ const Ledger = (sequelize, DataTypes) => {
     try {
 
       promises.push(models.Ledger.findAll({
-        where: { user_id: uid, updatedAt: { [Op.gte]: '2017-08-01' } },
+        where: { user_id: uid, updatedAt: { [Op.gte]: config.goalmine.start_date } },
         attributes: ['id', 'description', 'amount', 'updatedAt'],
         raw: true
       }));
@@ -74,10 +75,10 @@ const Ledger = (sequelize, DataTypes) => {
 
     try {
       const rows = await models.Ledger.findAll({
-        where: { user_id: uid, updatedAt: { [Op.gte]: '2018-08-01'} },
+        where: { user_id: uid, updatedAt: { [Op.gte]: config.goalmine.start_date } },
         attributes: ['amount']
       });
-      return rows.map(el => el.amount).reduce((sum, value) => sum + value, 0);
+      return rows.map(el => el.amount).reduce((sum, value) => sum + +value, 0);
     } catch (e) {
       logger.error(`could not get ledger balance for user ${ uid } (${ e })`);
       return null;

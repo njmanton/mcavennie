@@ -20,6 +20,7 @@ const config = {
   goalmine: {
     start_week: 601,
     league_start: 601,
+    start_date: '2018-08-01',
     league_weeks: 30,
     hide_bets: 1,
     pts_closest: 3,
