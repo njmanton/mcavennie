@@ -142,7 +142,7 @@ const Bet = (sequelize, DataTypes) => {
 
     } catch (e) {
       logger.error(e);
-      return(false);
+      return(null);
     }
 
 
