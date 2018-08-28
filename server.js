@@ -31,6 +31,9 @@ var hbs = bars.create({
             lostheart = '<span class="lost">♥</span>';
         return lost ? heart.repeat(lives - 1) + lostheart : heart.repeat(lives);
       }
+    },
+    ledger: amount => {
+      return amount.toLocaleString('en-GB', { style: 'currency', currency: 'GBP'});
     }
   }
 });
