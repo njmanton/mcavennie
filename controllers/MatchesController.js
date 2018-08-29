@@ -117,7 +117,7 @@ const controller = {
 
       match.fdate = moment(match.date).format('ddd DD MMM');
       res.render('matches/view', {
-        title: `Match ${ match.id }`,
+        title: `${ match.TeamA.name } v ${ match.TeamB.name }`,
         data: match,
         result: match.result || 'v',
         editable: req.user && req.user.admin && match.predictions.length == 0 && match.bets.length == 0,
