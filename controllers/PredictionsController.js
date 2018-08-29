@@ -100,7 +100,7 @@ const controller = {
       if (!req.user) throw new Error('no user');
       res.send(await models.Prediction.predCount(req.user.id));
     } catch (e) {
-      res.status(404).send({ err: e.message });
+      res.status(403).send({ err: e.message });
     }
 
   }]
