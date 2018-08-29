@@ -92,6 +92,16 @@ const controller = {
       res.redirect(`/bets/${ req.body.week }`);
     }
 
+  }],
+
+  get_counts: [utils.isAjax, async (req, res) => {
+    try {
+      if (!req.user) throw new Error('no user');
+      res.send(await models.Bet.betCount(req.user.id));
+    } catch (e) {
+      res.status(404).send({ err: e.message });
+    }
+
   }]
 
 };

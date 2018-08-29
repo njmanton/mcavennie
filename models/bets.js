@@ -286,6 +286,40 @@ const Bet = (sequelize, DataTypes) => {
 
   };
 
+  model.betCount = async uid => {
+    const models = require('.');
+
+    try {
+      const week = await models.Week.current();
+
+      const sql = `SELECT 
+        M.week_id,
+        count(B.prediction) AS bets
+        FROM bets B
+        JOIN matches M ON M.id = B.match_id AND B.user_id = :uid
+        WHERE M.week_id >= :week
+        GROUP BY week_id`;
+      let bets = await models.sequelize.query(sql, {
+        replacements: {
+          week: week.id,
+          uid: uid },
+        type: sequelize.QueryTypes.SELECT
+      });
+
+      let html = [];
+      for (let itm of bets) {
+        let txt = '';
+        const pbadge = itm.preds < 3 ? 'danger' : 'success';
+        txt = `<li><a href="/bets/${ itm.week_id }">Wk ${ itm.week_id }</a> <span class="badge badge-${ pbadge }">${ itm.bets }</span></li>`;
+        html.push(txt);
+      }
+      return html;
+
+    } catch (e) {
+      return null;
+    }
+  };
+
   return model;
 
 };

@@ -232,7 +232,28 @@ const controller = {
     }
 
     res.redirect(`/killers/${ id }`);
+
   }],
+
+  // ajax function to get killer games for logged in user, for sidebar
+  get_games: [utils.isAjax, async (req, res) => {
+
+    try {
+      //if (!req.user) throw new Error('no user');
+      const games = await models.Kentry.findAll({
+        where: { user_id: 1 },
+        attributes: ['killer_id'],
+        include: {
+          model: models.Killer,
+          attributes: [],
+          where: { complete: 0 }
+        }
+      });
+      res.send([...new Set(games.map(({ killer_id }) => `<li><a href="/killers/${ killer_id }">Game ${ killer_id }</a></li>`))]);
+    } catch (e) {
+      res.status(404).send([]);
+    }
+  }]
 
 };
 

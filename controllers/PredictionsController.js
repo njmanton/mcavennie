@@ -29,7 +29,6 @@ const controller = {
         table: table.table,
         totals: table.totals,
         expired: expired,
-        debug: JSON.stringify([expired, week], null, 2),
         scripts: ['/js/prededit.js']
       });
       //res.send(`<pre>${ JSON.stringify([table, overall, week], null, 2)}</pre>`);
@@ -94,6 +93,16 @@ const controller = {
     } else {
       res.status(400).send({ msg: 'Could not update joker' });
     }
+  }],
+
+  get_counts: [utils.isAjax, async (req, res) => {
+    try {
+      if (!req.user) throw new Error('no user');
+      res.send(await models.Prediction.predCount(req.user.id));
+    } catch (e) {
+      res.status(404).send({ err: e.message });
+    }
+
   }]
 
 };

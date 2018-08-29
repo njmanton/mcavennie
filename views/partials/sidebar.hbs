@@ -1,52 +1,78 @@
 <nav id="sidebar">
-  <section class="sidebar-header">
-    <p><img src="/img/gm_logo.png" alt="Goalmine logo" height="140px" width="140px" /></p>
-    {{#if user.image}}<img src="{{ user.image }}" />{{/if }}
-    {{#if user }}
-    {{ user.username }} 
+  <div class="sidebar-content">
+    <section class="sidebar-header">
+      <p><img src="/img/gm_logo.png" alt="Goalmine logo" height="140px" width="140px" /></p>
+      {{#if user.image}}<img src="{{ user.image }}" />{{/if }}
+      {{#if user }}
+      {{ user.username }} 
+      {{#if user.admin }}
+      <span class="badge badge-warning">admin</span> 
+      {{/if }}  
+      <br>
+      <a href="/logout">logout</a>
+      {{ else }}
+      <br>
+      <a href="/login">login</a>
+      {{/if }}    
+    </section>
+
+    {{#if user.goalmine }}
+    <section>
+      <h5>Goalmine <small class="gmrank"></small></h5>
+      <ul id="gm-list"></ul>
+      {{ ledger user.balance.ledger }}
+    </section>
+    {{/if }}
+
+    {{#if user.tipping }}
+    <section>
+      <h5>Tipping <small class="tprank"></small></h5>
+      <ul id="tp-list"></ul>
+    </section>
+    {{/if }}
+
+    {{#if user.killer }}
+    <section>
+      <h5>Killer</h5>
+      <ul id="k-list"></ul>
+    </section>
+    {{/if }}
+
     {{#if user.admin }}
-    <span class="badge badge-warning">admin</span> 
-    {{/if }}  
-    <br>
-    <a href="/logout">logout</a>
-    {{ else }}
-    <br>
-    <a href="/login">login</a>
-    {{/if }}    
-  </section>
+    <section>
+      <h5>Admin</h5>
+      <ul>
+        <li>{{#if pending }}<a href="/admin/pending">Pending matches</a>{{ else }}No matches pending{{/if }}</li>
+        <li><a href="/admin/email">Send bulk email</a></li>
+        <li><a href="/killers/add">Add new killer game</a></li>
+      </ul>
+    </section>
+    {{/if }}
+  </div>
 
-  <p>{{ user.balance.goalmine.rank }}</p>
-
-  {{#if user.goalmine }}
-  <section>
-    <h5>Goalmine</h5>
-    <a href="/predictions/602">Wk 602</a>
+  <section class="sidebar-menu">
+    <div id="sidebarToggle">
+      <button class=""><i class="fas fa-bars"></i></button>
+      <span class="menu-label">HIDE</span>
+    </div>
   </section>
-  {{/if }}
-
-  {{#if user.tipping }}
-  <section>
-    <h5>Tipping</h5>
-    <a href="/bets/602">Wk 602</a>
-  </section>
-  {{/if }}
-
-  {{#if user.killer }}
-  <section>
-    <h5>Killer</h5>
-    <a href="/killers/2">Killer game 2</a>
-  </section>
-  {{/if }}
-
-  {{#if user.admin }}
-  <section>
-    <h5>Admin</h5>
-    <ul>
-      <li>{{#if pending }}<a href="/admin/pending">Pending matches</a>{{ else }}No matches pending{{/if }}</li>
-      <li><a href="/admin/email">Send bulk email</a></li>
-      <li><a href="/killers/add">Add new killer game</a></li>
-    </ul>
-  </section>
-  {{/if }}
 
 </nav>
+<style>
+  .sidebar-content {
+    float: left;
+    width: 220px;
+  }
+  .sidebar-menu {
+    float: right;
+    width: 30px;
+    cursor: pointer;
+  }
+  .menu-label {
+    display: block;
+    transform: rotate(90deg);
+    padding-left: 0.5em;
+    color: #eee;
+    vertical-align: middle;
+  }
+</style>

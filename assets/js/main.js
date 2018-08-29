@@ -9,10 +9,62 @@ window.setTimeout(function() {
 
 $(function() {
 
+  // show/hide the sidebar
   $('#sidebarToggle').on('click', function() {
-    console.log('button');
-    $('#sidebar').toggleClass('active');
+    console.log(window.innerWidth);
+    var sb = $('#sidebar');
+    sb.toggleClass('active');
+    if (sb.hasClass('active')) {
+      if (window.innerWidth >= 768) {
+        $('.menu-label').text('MENU');
+      } else {
+        $('.menu-label').text('HIDE');
+      }
+    } else {
+      if (window.innerWidth >= 768) {
+        $('.menu-label').text('HIDE');
+      } else {
+        $('.menu-label').text('MENU');
+      }
+    }
   });
+
+  var getPreds = function() {
+    $.get('/predictions/counts/')
+      .done(function(res) {
+        try {
+          var lst = $('#gm-list');
+          for (var x = 0; x < res.length; x++) {
+            lst.append(res[x]);
+          }
+        } catch (e) {
+          console.log('error');
+        }
+      });
+    $.get('/bets/counts')
+      .done(function(res) {
+        try {
+          var lst = $('#tp-list');
+          for (var x = 0; x < res.length; x++) {
+            lst.append(res[x]);
+          }
+        } catch (e) {
+          console.log('error');
+        }
+      });
+    $.get('/killers/games')
+      .done(function(res) {
+        try {
+          var lst = $('#k-list');
+          for (var x = 0; x < res.length; x++) {
+            lst.append(res[x]);
+          }
+        } catch (e) {
+          console.log('error');
+        }
+      });
+  };
+  getPreds();
 
   $('#sendPreview').on('click', function() {
     $.post({

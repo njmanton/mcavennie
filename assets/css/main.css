@@ -15,12 +15,13 @@ input .score {
 #sidebar {
   background-color: #222;
   color: #dedede;
-  margin-left: -250px;
+  height: 100%;
+  margin-left: -220px;
   max-width: 250px;
   min-height: 100vh;
   min-width: 250px;
   text-align: center;
-  transition: all 0.3s; }
+  transition: all .3s; }
   #sidebar.active {
     margin-left: 0; }
 
@@ -55,4 +56,4 @@ footer p {
   #sidebar {
     margin-left: 0; }
     #sidebar.active {
-      margin-left: -250px; } }
+      margin-left: -220px; } }

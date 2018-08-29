@@ -214,14 +214,23 @@ const Prediction = (sequelize, DataTypes) => {
         JOIN matches M ON M.id = P.match_id AND P.user_id = :uid
         WHERE M.week_id >= :week
         GROUP BY week_id`;
-      const preds = await models.sequelize.query(sql, {
+      let preds = await models.sequelize.query(sql, {
         replacements: {
           week: week.id,
           uid: uid },
         type: sequelize.QueryTypes.SELECT
       });
 
-      return _.groupBy(preds, 'week_id');
+      let html = [];
+      for (let itm of preds) {
+        let txt = '';
+        const pbadge = itm.preds < 12 ? 'warning' : 'success';
+        txt = `<a href="/predictions/${ itm.week_id }">Wk ${ itm.week_id }</a> <span class="badge badge-${ pbadge }">${ itm.preds }</span>`;
+        if (itm.joker == 0) txt += '<span class="badge badge-danger">J</span>';
+        html.push(`<li>${ txt }</li>`);
+      }
+
+      return html;
 
     } catch (e) {
       return null;

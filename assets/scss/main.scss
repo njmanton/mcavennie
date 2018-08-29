@@ -24,12 +24,13 @@ $flash-hilite: #7f7;
 #sidebar {
   background-color: $dark-bg;
   color: $dark-fg;
-  margin-left: -250px;
+  height: 100%;
+  margin-left: -220px;
   max-width: 250px;
   min-height: 100vh;
   min-width: 250px;
   text-align: center;
-  transition: all 0.3s;
+  transition: all .3s;
 
   &.active {
     margin-left: 0;
