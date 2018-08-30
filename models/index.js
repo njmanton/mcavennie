@@ -85,6 +85,10 @@ db.Ledger.belongsTo(db.User, { foreignKey: 'user_id' });
 db.Killer.hasMany(db.Kentry, { foreignKey: 'killer_id' });
 db.Kentry.belongsTo(db.Killer, { foreignKey: 'killer_id' });
 
+// killer 1:1 week
+db.Killer.hasOne(db.Week, { foreignKey: 'id' });
+db.Week.belongsTo(db.Killer, { foreignKey: 'id' });
+
 // match 1:n kentry
 db.Match.hasMany(db.Kentry, { foreignKey: 'match_id' });
 db.Kentry.belongsTo(db.Match, { foreignKey: 'match_id' });
