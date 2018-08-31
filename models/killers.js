@@ -39,7 +39,10 @@ const Killer = (sequelize, DataTypes) => {
     const models = require('.');
     const game = await models.Killer.findById(kid, {
       attributes: ['id', 'description', 'complete'],
-      include: {
+      include: [{
+        model: models.User,
+        attributes: ['id', 'username']
+      }, {
         model: models.Kentry,
         attributes: ['round_id', 'week_id', 'user_id', 'match_id', 'pred', 'lives'],
         include: [{
@@ -61,12 +64,13 @@ const Killer = (sequelize, DataTypes) => {
           model: models.User,
           attributes: ['id', 'username']
         }]
-      }
+      }]
     });
     let data = { game: {}, rounds: {} };
     data.game = {
       id: game.id,
       desc: game.description,
+      organiser: game.user,
       complete: game.complete
     };
     let kentry = null;
