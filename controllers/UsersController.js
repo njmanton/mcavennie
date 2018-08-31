@@ -54,11 +54,12 @@ const controller = {
     // validate form fields
     // if username and email exist, reset password
     // post format { username: <username>, email: <email> }
-    const user = await models.User.findOne({
-      where: [{ username: req.body.username }, { email: req.body.email }]
-    });
+    try {
+      const user = await models.User.findOne({
+        where: [{ username: req.body.username }, { email: req.body.email }]
+      });
+      if (!user) throw new Error('no such user');
 
-    if (user) {
       logger.info(`${ user.username } made a password reset request`);
       var reset = utils.getTempName(10),
           now = moment().format('ddd DD MMM, HH:mm');
@@ -80,11 +81,13 @@ const controller = {
       } catch (e) {
         logger.error(e.name);
       }
-    } else {
-      logger.warn(`Password reset request failed for (${ req.body.username }, ${ req.body.email }) - no such user`);
+      req.flash('info', 'Thank you. If those details were found, you will shortly receive an email explaining how to reset your password');
+    } catch (e) {
+      req.flash('error', `could not process reset password request (${ e.message })`);
+    } finally {
+      res.redirect('/');
     }
-    req.flash('info', 'Thank you. If those details were found, you will shortly receive an email explaining how to reset your password');
-    res.redirect('/');
+
   },
 
   // show reset password screen
