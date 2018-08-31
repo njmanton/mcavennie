@@ -115,6 +115,12 @@ const controller = {
       if (!match) throw new Error('match not found');
       const goals = match.result ? match.result.split('-') : ['-', '-'];
 
+      match.bets.map(bet => {
+        bet.sign = (bet.outcome > 0);
+        bet.outcome = bet.outcome.toLocaleString('en-GB', { style: 'currency', currency: 'GBP'});
+        bet.prediction = bet.prediction == 1 ? 'Home' : bet.prediction == 2 ? 'Away' : 'Draw';
+      });
+
       match.fdate = moment(match.date).format('ddd DD MMM');
       res.render('matches/view', {
         title: `${ match.TeamA.name } v ${ match.TeamB.name }`,
