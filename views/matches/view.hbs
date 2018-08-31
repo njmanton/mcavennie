@@ -1,6 +1,6 @@
 <section class="row justify-content-center">
 
-  <div class="col-6">
+  <div class="col-12">
     
     <table class="matchresult">
       <caption><span class="flag-icon flag-icon-{{ data.league.country }}"></span> <a href="/leagues/{{ data.league.id }}">{{ data.league.name }}</a>, {{ data.fdate }}</caption>
@@ -32,19 +32,18 @@
     <div class="tab-content">
       {{#if data.predictions }}
       <div class="tab-pane active" id="predictions" role="tabpanel">
-        <h3>Predictions</h3>
         <table class="table">
           <thead>
             <tr>
               <th>Player</th>
-              <th>Points</th>
+              <th class="score">Pts</th>
             </tr>
           </thead>
           <tbody>        
           {{#each data.predictions }}
             <tr>
               <td><a href="/users/{{ user.id }}">{{ user.username }}</a></td>
-              <td class="pts{{ points }} {{#if joker}}joker{{/if }}">{{ pred }}</td>
+              <td class="score pts{{ points }} {{#if joker}}joker{{/if }}">{{ pred }}</td>
             </tr>
           {{/each }}
           </tbody>
@@ -53,21 +52,20 @@
       {{/if }}
       {{#if data.bets }}
       <div class="tab-pane {{#unless data.predictions }}active{{/unless }}" id="bets" role="tabpanel">
-        <h3>Bets</h3>
         <table class="table">
           <thead>
             <tr>
               <th>Player</th>
-              <th>Amount</th>
               <th>Prediction</th>
+              <th>Outcome</th>
             </tr>
           </thead>
           <tbody>
             {{#each data.bets }}
             <tr>
               <td>{{ user.username }}</td>
-              <td>{{ amount }}</td>
               <td>{{ prediction }}</td>
+              <td class="money {{#if sign }}pos{{/if }}">{{ outcome }}</td>
             </tr>    
             {{/each }}
           </tbody>
