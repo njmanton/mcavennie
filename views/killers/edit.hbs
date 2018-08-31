@@ -1,3 +1,29 @@
 <section>
-  
+  <h3>{{ title }}</h3>
+
+  <form action="/killers/edit/{{ kid }}" method="POST">
+    
+    <p>Existing</p>
+    {{#each users }}
+    <p>{{ user_id }} - {{ user.username }}</p>
+    {{/each }}
+    <label for="players">Players:
+      <select name="players" id="players" multiple="multiple">
+        {{#each available }}
+        <option value="{{ id }}">{{ username }}</option>
+        {{/each }}
+      </select>
+    </label>
+    <label for="desc">Description
+      <textarea name="desc" cols="30" rows="3">{{ desc }}</textarea>
+    </label>
+    <label for="week">Start Week
+      <select name="week" id="week" disabled>
+        <option value="{{ start }}">{{ start }}</option>
+      </select>
+    </label>
+
+    <input type="submit" class="btn btn-info" value="Edit" />
+
+  </form>
 </section>

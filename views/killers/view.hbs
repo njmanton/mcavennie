@@ -1,6 +1,8 @@
 <section>
   <h3>Killer game {{ game.id }}</h3>
   <p>{{ game.desc }}</p>
+  <p>{{ game.organiser.username }}</p>
+  {{#if button }} <a href="/killers/edit/{{ game.id }}" class="btn btn-info">Edit game</a>{{/if }}
 
   {{#each rounds }}
     <h5>Round {{ @key }} (Week {{ week }})</h5>

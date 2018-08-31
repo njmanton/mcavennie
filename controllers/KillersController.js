@@ -76,37 +76,91 @@ const controller = {
 
   }],
 
-  get_edit_id: [utils.isAdmin, async (req, res, id) => {
+  // show edit form for killer game
+  get_edit_id: [utils.isAuthenticated, async (req, res, id) => {
 
-    let promises = [];
-    const now = moment().format('YYYY-MM-DD');
-    promises.push(models.Killer.findAll({
-      where: { id: id },
-      attributes: ['id', 'description', 'start_week'],
-      include: [{
-        model: models.User,
+    try {
+      const killer = await models.Killer.findById(id, {
+        attributes: ['id', 'description', 'start_week'],
+        include: [{
+          model: models.Week,
+          attributes: ['start']
+        }, {
+          model: models.User,
+          attributes: ['id', 'username']
+        }, {
+          model: models.Kentry,
+          attributes: ['user_id'],
+          include: {
+            model: models.User,
+            attributes: ['username']
+          }
+        }]
+      });
+      // if game already in week 2, or user isn't organiser/admin, throw error
+      if (!req.user) throw new Error('You must be logged in'); // testing only
+      if (moment().isAfter(moment(killer.week.start))) throw new Error('Game already started');
+      if ((killer.user.id !== req.user.id && req.user.admin == 0)) throw new Error('You must be the organiser or an admin to edit this game');
+
+      const users = await models.User.findAll({
+        where: models.sequelize.where(models.sequelize.literal('games & 4'), '!=', 0),
         attributes: ['id', 'username']
-      }, {
-        model: models.Kentry,
-        attributes: ['user_id']
-      }, {
-        model: models.Week,
-        attributes: ['id', 'start', 'status']
-      }]
-    }));
-    promises.push(models.User.findAll({
-      where: models.sequelize.where(models.sequelize.literal('games & 4'), '!=', 0),
-      attributes: ['id', 'username']
-    }));
-    promises.push(models.Week.findAll({
-      where: { status: 0, start: { $gte: now } },
-      attributes: ['id', 'start'],
-      order: [['id', 'ASC']],
-      limit: 3
-    }));
+      });
 
-    const [killers, users, weeks] = await Promise.all(promises);
-    weeks; killers; users;
+      // convert existing players to simple uid array and diff it from eligible users
+      const existing = killer.kentries.map(({ user_id }) => user_id);
+      const diff = users.filter(itm => !existing.includes(itm.id));
+
+      res.render('killers/edit', {
+        title: `Edit Killer ${ id }`,
+        kid: id,
+        users: killer.kentries,
+        available: diff,
+        desc: killer.description,
+        start: killer.start_week,
+        debug: JSON.stringify(killer.kentries, null, 2)
+      });
+    } catch (e) {
+      logger.error(e);
+      req.flash('error', e.message);
+      res.redirect(`/killers/${ id }`);
+    }
+
+  }],
+
+  // handle the posted data from killer edit form
+  post_edit_id: [utils.isAuthenticated, async (req, res, id) => {
+    // get the new players and add kentry records, update description
+    try {
+      // update the killer entry
+      const killer = await models.Killer.findById(id);
+      killer.update({
+        description: req.body.desc
+      });
+      let kentries = [];
+
+      // convert player ids into array (otherwise we iterate over the characters of a singleton value)
+      if (!Array.isArray(req.body.players)) req.body.players = [req.body.players];
+
+      // create a kentry record for every added user
+      for (let x = 0; x < req.body.players.length; x++) {
+        kentries.push(models.Kentry.create({
+          killer_id: id,
+          week_id: killer.start_week,
+          round_id: 1,
+          lives: 3,
+          user_id: req.body.players[x]
+        }).catch(e => { logger.error(e.message); }));
+      }
+      const promises = await Promise.all(kentries);
+      req.flash('success', `Killer game ${ id } edited`);
+      logger.info(`Killer game ${ id } edited, adding ${ promises.length } players`);
+    } catch (e) {
+      req.flash('error', 'internal error editing game');
+      logger.error(`internal error editing killer game - ${ e }`);
+    } finally {
+      res.redirect(`/killers/${ id }`);
+    }
 
   }],
 
@@ -161,7 +215,8 @@ const controller = {
         game: killer.game,
         rounds: killer.rounds,
         edit: edit,
-        debug: JSON.stringify([killer, edit], null, 2),
+        button: req.user.admin || req.user.id == killer.game.organiser.id,
+        debug: JSON.stringify([], null, 2),
         scripts: ['/js/vendor/jquery.easy-autocomplete.min.js', '/js/killeredit.js']
       });
     } catch (e) {
