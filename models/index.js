@@ -86,8 +86,8 @@ db.Killer.hasMany(db.Kentry, { foreignKey: 'killer_id' });
 db.Kentry.belongsTo(db.Killer, { foreignKey: 'killer_id' });
 
 // killer 1:1 week
-db.Killer.hasOne(db.Week, { foreignKey: 'id' });
-db.Week.belongsTo(db.Killer, { foreignKey: 'id' });
+db.Week.hasMany(db.Killer, { foreignKey: 'start_week' });
+db.Killer.belongsTo(db.Week, { foreignKey: 'start_week' });
 
 // match 1:n kentry
 db.Match.hasMany(db.Kentry, { foreignKey: 'match_id' });
