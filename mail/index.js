@@ -11,6 +11,9 @@ const mail = {
 
   send: (recipient, cc, subject, template_file, context, done) => {
 
+    // register the email footer partial
+    hbs.registerPartial('emfooter', fs.readFileSync(path.join(__dirname, 'templates', '_emfooter.hbs'), 'utf8'));
+
     // convert template and context into message
     const template = fs.readFileSync(path.join(__dirname, 'templates', template_file), 'utf8'),
           message = hbs.compile(template);
