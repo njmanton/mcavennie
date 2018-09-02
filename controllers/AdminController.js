@@ -127,16 +127,15 @@ const controller = {
               date: now
             };
 
-      mail.send(email, null, req.body.subject, template, context, resp => {
-        //console.log(resp);
-        res.send(resp);
+      mail.send(email, null, req.body.subject, template, context, () => {
+        logger.info(`sending mail to ${ email }`);
       });
       req.flash('success', 'email has been sent');
     } catch (e) {
       logger.error(`error sending bulk email (${ e.message })`);
       req.flash('error', e.message);
     } finally {
-      res.redirect('/admin/');
+      res.redirect('/admin/email');
     }
 
   }]
