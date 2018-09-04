@@ -42,7 +42,7 @@
     <section>
       <h5>Admin</h5>
       <ul>
-        <li>{{#if pending }}<a href="/admin/pending">Pending matches</a>{{ else }}No matches pending{{/if }}</li>
+        <li>{{#if user.pending }}<a href="/admin/pending">Pending matches</a> <span class="badge badge-success">{{ user.pending }}</span>{{ else }}No results pending{{/if }}</li>
         <li><a href="/admin/email">Send bulk email</a></li>
         <li><a href="/killers/add">Add new killer game</a></li>
       </ul>
