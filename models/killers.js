@@ -132,7 +132,7 @@ const Killer = (sequelize, DataTypes) => {
 
   };
 
-  // called when result of a killer match is updated
+  // called when result of a killer match is updated. returns # killer entries updated
   model.updateKiller = async mid => {
     const models = require('.');
 
@@ -140,32 +140,59 @@ const Killer = (sequelize, DataTypes) => {
       // get all kller entries for that match
       const kentries = await models.Kentry.findAll({
         where: { match_id: mid },
-        include: {
+        include: [{
+          model: models.User,
+          attributes: ['username', 'email']
+        }, {
           model: models.Match,
-          attributes: ['id', 'result']
-        }
+          attributes: ['id', 'result', 'teama_id', 'teamb_id']
+        }]
       });
       // if there's none, return
-      if (kentries.length == 0) return null;
+      if (kentries.length == 0) return 0;
+      logger.info(`processing ${ kentries.length } killer entries for match ${ mid }...`);
 
       // loop through killer entries, checking the result and lives remaining
       let upd = 0;
       kentries.map(async kentry => {
+        const kid = kentry.killer_id,
+              uid = kentry.user_id,
+              rid = kentry.round_id,
+              wid = kentry.week_id,
+              ta  = kentry.match.teama_id,
+              tb  = kentry.match.teamb_id;
+
+        const email = kentry.user.email,
+              subject = `Goalmine Killer game ${ kid } update`,
+              context = {
+                name: kentry.user.username,
+                teama: ta,
+                teamb: tb,
+                lives: kentry.lives,
+                kid: kid,
+                rid: rid
+              };
+
         let lives = kentry.lives;
         if (!utils.calcKiller(kentry.pred, kentry.match.result)) lives--;
         if (lives) {
+
           // still alive so send an email
-          // TODO email
+          const template = 'killer_next_round.hbs';
+          mail.send(email, null, subject, template, context, () => {
+            logger.info(`sending kentry mail to ${ email }`);
+          });
+
           // add a new killer entry for next week (if not already one)
           // (this might happen if a result is re-entered)
           const nextWeek = await models.Kentry.findOne({
-            where: { user_id: kentry.user_id, round_id: kentry.round_id + 1, week_id: kentry.week_id + 1 }
+            where: { user_id: uid, killer_id: kid, week_id: wid + 1 }
           });
           const data = {
-            killer_id: kentry.killer_id,
-            user_id: kentry.user_id,
-            round_id: kentry.round_id + 1,
-            week_id: kentry.week_id + 1,
+            killer_id: kid,
+            user_id: uid,
+            round_id: rid + 1,
+            week_id: wid + 1,
             lives: lives
           };
           if (nextWeek) {
@@ -175,17 +202,35 @@ const Killer = (sequelize, DataTypes) => {
             const add = await models.Kentry.create(data);
             if (add) logger.info(`created kentry ${ add.id } due to match ${ mid } result`);
           }
-          logger.info(`user ${ kentry.user_id } into round ${ kentry.round_id + 1 } on killer game ${ kentry.killer_id }`);
+          logger.info(`user ${ uid } into round ${ rid + 1 } on killer game ${ kid }`);
+
+          // finally add 'used' teams to Khistory
+          let promises = [];
+          promises.push(models.Khistory.create({ user_id: uid, killer_id: kid, team_id: ta}));
+          promises.push(models.Khistory.create({ user_id: uid, killer_id: kid, team_id: tb}));
+          const histories = await Promise.all(promises);
+          logger.info(`histories ${ histories }`); // TODO remove after testing
+          logger.info(`teams [${ [ta, tb] }] have been added to the killer history for user ${ uid } and game ${ kid }`);
+
         } else {
           // dead!
-          logger.info(`user ${ kentry.user_id } DEAD in round ${ kentry.round_id } on killer game ${ kentry.killer_id }`);
+          logger.info(`user ${ uid } DEAD in round ${ rid } on killer game ${ kid }`);
+
+          const template = 'killer_dead.hbs';
+          mail.send(email, null, subject, template, context, () => {
+            logger.info(`sending kentry mail to ${ email }`);
+          });
+
         }
         upd++;
       });
       return upd;
+
     } catch (e) {
+
       logger.error(`error updating killer. (${ e.message })`);
       return null;
+
     }
 
   };
