@@ -168,13 +168,16 @@ const Killer = (sequelize, DataTypes) => {
                 name: kentry.user.username,
                 teama: ta,
                 teamb: tb,
-                lives: kentry.lives,
+                lives: '❤️'.repeat(lives),
                 kid: kid,
                 rid: rid
               };
 
         let lives = kentry.lives;
-        if (!utils.calcKiller(kentry.pred, kentry.match.result)) lives--;
+        if (!utils.calcKiller(kentry.pred, kentry.match.result)) {
+          lives--;
+          context.lost = 1; // customise the content of email
+        }
         if (lives) {
 
           // still alive so send an email
@@ -209,8 +212,7 @@ const Killer = (sequelize, DataTypes) => {
           promises.push(models.Khistory.create({ user_id: uid, killer_id: kid, team_id: ta}));
           promises.push(models.Khistory.create({ user_id: uid, killer_id: kid, team_id: tb}));
           const histories = await Promise.all(promises);
-          logger.info(`histories ${ histories }`); // TODO remove after testing
-          logger.info(`teams [${ [ta, tb] }] have been added to the killer history for user ${ uid } and game ${ kid }`);
+          logger.info(`${ histories.count } teams [${ [ta, tb] }] have been added to the killer history for user ${ uid } and game ${ kid }`);
 
         } else {
           // dead!
