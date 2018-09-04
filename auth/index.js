@@ -58,7 +58,8 @@ module.exports = app => {
         goalmine: await models.Standing.balance(req.user.id),
         tipping: await models.Place.balance(req.user.id)
       };
-
+      const out = await models.Match.outstanding();
+      res.locals.user.pending = out.length;
     }
     next();
   });
