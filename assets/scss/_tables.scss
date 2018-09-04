@@ -1,6 +1,19 @@
 // styling for table elements
 
+caption {
+  caption-side: top;
+  text-align: center;
+}
+
+td.score, input.score {
+  width: 3.2rem;
+}
+
 // goalmine points colors
+.joker {
+  background: url('/img/joker_icon.png') no-repeat right top;
+}
+
 .pts1, .pts2 {
   background-color: $cr;
 }
@@ -16,5 +29,34 @@
 input {
   .score {
     width: 3rem;
+  }
+}
+
+.money {
+  color: red;
+
+  &.pos {
+    color: green;
+  }
+}
+
+.matchresult {
+  border-collapse: separate;
+  margin-bottom: 1rem;
+  width: 100%;
+
+  tr {
+    font-size: 2rem;
+  }
+
+  th {
+    background-color: aquamarine;
+    padding: .5rem .5rem .5rem 3rem;
+  }
+
+  td {
+    background-color: antiquewhite;
+    text-align: center;
+    width: 4rem;
   }
 }

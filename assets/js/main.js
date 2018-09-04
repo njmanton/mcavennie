@@ -11,7 +11,6 @@ $(function() {
 
   // show/hide the sidebar
   $('#sidebarToggle').on('click', function() {
-    console.log(window.innerWidth);
     var sb = $('#sidebar');
     sb.toggleClass('active');
     if (sb.hasClass('active')) {

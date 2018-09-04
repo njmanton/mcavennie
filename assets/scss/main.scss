@@ -19,6 +19,10 @@ $flash-hilite: #7f7;
 @import '_tables';
 @import '_forms';
 
+// override some bootstrap defaults
+.alert {
+  margin-bottom: 0;
+}
 
 // main structural tags
 #sidebar {
@@ -35,6 +39,11 @@ $flash-hilite: #7f7;
   &.active {
     margin-left: 0;
   }
+}
+
+main {
+  padding: 1em;
+  width: 100%;
 }
 
 .wrapper {
