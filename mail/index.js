@@ -11,36 +11,44 @@ const mail = {
 
   send: (recipient, cc, subject, template_file, context, done) => {
 
-    // register the email footer partial
-    hbs.registerPartial('emfooter', fs.readFileSync(path.join(__dirname, 'templates', '_emfooter.hbs'), 'utf8'));
+    try {
 
-    // convert template and context into message
-    const template = fs.readFileSync(path.join(__dirname, 'templates', template_file), 'utf8'),
-          message = hbs.compile(template);
+      // register the email footer partial
+      hbs.registerPartial('emfooter', fs.readFileSync(path.join(__dirname, 'templates', '_emfooter.hbs'), 'utf8'));
 
-    // add app details to the context
-    context.app = {
-      version: pkg.version,
-      name: pkg.name
-    };
+      // convert template and context into message
+      const template = fs.readFileSync(path.join(__dirname, 'templates', template_file), 'utf8'),
+            message = hbs.compile(template);
 
-    const data = {
-      from: '<no-reply@goalmine.eu>',
-      to: recipient,
-      subject: subject,
-      text: message(context),
-      html: message(context)
-    };
+      // add app details to the context
+      context.app = {
+        version: pkg.version,
+        name: pkg.name
+      };
 
-    if (cc) data.cc = cc;
+      const data = {
+        from: '<no-reply@goalmine.eu>',
+        to: recipient,
+        subject: subject,
+        text: message(context),
+        html: message(context)
+      };
 
-    mailgun.messages().send(data).then(response => {
-      logger.info(`email sent to ${ recipient } with subject ${ subject }`);
-      done(response);
-    }, err => {
-      logger.error(`${ template_file } not sent for user ${ recipient } (${ err })`);
-      done(err);
-    });
+      if (cc) data.cc = cc;
+
+      mailgun.messages().send(data).then(response => {
+        logger.info(`email sent to ${ recipient } with subject ${ subject }`);
+        done(response);
+      }, err => {
+        logger.error(`${ template_file } not sent for user ${ recipient } (${ err })`);
+        done(err);
+      });
+
+    } catch (e) {
+      logger.error(`error in mail.send (${ e })`);
+      done(e);
+    }
+
   },
 };
 
