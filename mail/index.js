@@ -15,6 +15,9 @@ const mail = {
 
       // register the email footer partial
       hbs.registerPartial('emfooter', fs.readFileSync(path.join(__dirname, 'templates', '_emfooter.hbs'), 'utf8'));
+      hbs.registerHelper('pluralise', (num, singular, plural = `${singular}s`) => {
+        return (num !== 1) ? plural : singular;
+      });
 
       // convert template and context into message
       const template = fs.readFileSync(path.join(__dirname, 'templates', template_file), 'utf8'),
