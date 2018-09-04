@@ -56,7 +56,7 @@ const controller = {
       }
 
       // update the match with the result
-      const upd = match.update({
+      const upd = await match.update({
         result: result
       });
 
