@@ -38,14 +38,12 @@ const Week = (sequelize, DataTypes) => {
       promises.push(models.Standing.findAll({ where: { position: 1, week_id: wid }, attributes: ['user_id'] }));
       // tie up any killer entries
       promises.push(models.Killer.resolveWeek(wid));
-      // check if there's a killer winner
-      promises.push(models.Killer.checkWinner(wid));
 
+      const [complete, players, winners, killers] = await Promise.all(promises);
 
-      const [complete, players, winners, killers, check] = await Promise.all(promises);
-
-      logger.info(`Resolved killer entries (${ killers })`);
-      if (check) logger.info(`Killer game ${ check } has been finalised`);
+      logger.info(`processed ${ killers } killer entries with prediction`);
+      const check = await models.Killer.checkWinner(wid);
+      if (check) logger.info(`processed ${ check } killer entries`);
 
       let ledgers = [];
       // winning amount is the number of players that week, times winning percentage, divided by winners
