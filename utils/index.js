@@ -115,7 +115,7 @@ const utils = {
     // pred is 1,2,'X'. result is actual match result
     try {
       if (!validScore(result)) throw new Error(`${ result } not valid score`);
-      if ([1, 2, 'X'].indexOf(pred) == -1) throw new Error(`${ pred } not valid prediction`);
+      if (['1', '2', 'X'].indexOf(pred) == -1) throw new Error(`${ pred } not valid prediction`);
       const [h, a] = result.split('-');
       let outcome = null;
       if (h > a) {
@@ -125,7 +125,7 @@ const utils = {
       } else {
         outcome = 'X';
       }
-      return outcome == pred;
+      return outcome == pred ? 1 : 0;
     } catch (e) {
       return null;
     }
