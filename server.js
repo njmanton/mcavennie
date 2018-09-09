@@ -34,6 +34,9 @@ var hbs = bars.create({
     },
     ledger: amount => {
       return amount.toLocaleString('en-GB', { style: 'currency', currency: 'GBP'});
+    },
+    pluralise: (num, singular, plural = `${singular}s`) => {
+      return (num !== 1) ? plural : singular;
     }
   }
 });
