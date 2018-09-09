@@ -1,9 +1,7 @@
 'use strict';
 
 const moment  = require('moment'),
-      Op      = require('sequelize').Op,
       logger  = require('winston'),
-      mail    = require('../mail'),
       utils   = require('../utils');
 
 const Killer = (sequelize, DataTypes) => {
@@ -111,8 +109,8 @@ const Killer = (sequelize, DataTypes) => {
       if ((kentry.lives < 2) && lost) {
         livesLeft = '<span>&#9760;</span>';
       } else {
-        const heart = '<span>♥</span>';
-        const lostheart = '<span class="lost">♥</span>';
+        const heart = '<span>❤️</span>';
+        const lostheart = '<span class="lost">🖤</span>';
         livesLeft = lost ? heart.repeat(kentry.lives - 1) + lostheart : heart.repeat(kentry.lives);
       }
       data.rounds[kentry.round_id].entries.push({
@@ -153,80 +151,22 @@ const Killer = (sequelize, DataTypes) => {
       logger.info(`processing ${ kentries.length } killer entries for match ${ mid }...`);
 
       // loop through killer entries, checking the result and lives remaining
-      let upd = 0;
-      kentries.map(async kentry => {
-        const kid = kentry.killer_id,
-              uid = kentry.user_id,
-              rid = kentry.round_id,
-              wid = kentry.week_id,
-              ta  = kentry.match.teama_id,
-              tb  = kentry.match.teamb_id;
-
-        const email = kentry.user.email,
-              subject = `Goalmine Killer game ${ kid } update`,
-              context = {
-                name: kentry.user.username,
-                teama: ta,
-                teamb: tb,
-                lives: '❤️'.repeat(lives),
-                kid: kid,
-                rid: rid
-              };
-
+      let promises = [];
+      kentries.map(kentry => {
+        let lost = 0;
         let lives = kentry.lives;
         if (!utils.calcKiller(kentry.pred, kentry.match.result)) {
           lives--;
-          context.lost = 1; // customise the content of email
+          lost = 1;
         }
         if (lives) {
-
-          // still alive so send an email
-          const template = 'killer_next_round.hbs';
-          mail.send(email, null, subject, template, context, () => {
-            logger.info(`sending kentry mail to ${ email }`);
-          });
-
-          // add a new killer entry for next week (if not already one)
-          // (this might happen if a result is re-entered)
-          const nextWeek = await models.Kentry.findOne({
-            where: { user_id: uid, killer_id: kid, week_id: wid + 1 }
-          });
-          const data = {
-            killer_id: kid,
-            user_id: uid,
-            round_id: rid + 1,
-            week_id: wid + 1,
-            lives: lives
-          };
-          if (nextWeek) {
-            const upd = await nextWeek.update(data);
-            if (upd) logger.info(`updated kentry ${ nextWeek.id } due to match ${ mid } result`);
-          } else {
-            const add = await models.Kentry.create(data);
-            if (add) logger.info(`created kentry ${ add.id } due to match ${ mid } result`);
-          }
-          logger.info(`user ${ uid } into round ${ rid + 1 } on killer game ${ kid }`);
-
-          // finally add 'used' teams to Khistory
-          let promises = [];
-          promises.push(models.Khistory.create({ user_id: uid, killer_id: kid, team_id: ta}));
-          promises.push(models.Khistory.create({ user_id: uid, killer_id: kid, team_id: tb}));
-          const histories = await Promise.all(promises);
-          logger.info(`${ histories.count } teams [${ [ta, tb] }] have been added to the killer history for user ${ uid } and game ${ kid }`);
-
-        } else {
-          // dead!
-          logger.info(`user ${ uid } DEAD in round ${ rid } on killer game ${ kid }`);
-
-          const template = 'killer_dead.hbs';
-          mail.send(email, null, subject, template, context, () => {
-            logger.info(`sending kentry mail to ${ email }`);
-          });
-
+          // second param is outcome (0 - alive, 1 - alive but lost life)
+          promises.push(models.Kentry.update(kentry.id, lost));
         }
-        upd++;
       });
-      return upd;
+
+      const upds = await Promise.all(promises);
+      return upds.length;
 
     } catch (e) {
 
@@ -304,7 +244,7 @@ const Killer = (sequelize, DataTypes) => {
   // find any live killer users with no prediction this week
   model.resolveWeek = async wid => {
     const models = require('.');
-
+    logger.info('checking empty predictions for Killer');
     // similar to updateKiller, this adjusts lives and adds a new
     // killer entry for the following week (if appropriate)
 
@@ -313,32 +253,20 @@ const Killer = (sequelize, DataTypes) => {
         where: { week_id: wid, pred: null }
       });
 
-      empty.map(async kentry => {
+      let promises = [];
+
+      empty.map(kentry => {
         let lives = kentry.lives;
         // no prediction so automatically lose a life
         lives--;
         if (lives) {
-          // still alive so send an email
-          // TODO email
-          // add a new killer entry for next week
-          // if there was no prediction there won't already be an entry for the following week
-          const add = await models.Kentry.create({
-            killer_id: kentry.killer_id,
-            user_id: kentry.user_id,
-            round_id: kentry.round_id + 1,
-            week_id: kentry.week_id + 1,
-            lives: lives
-          });
-          if (add) {
-            logger.info(`user ${ kentry.user_id } into round ${ kentry.round_id + 1 } on killer game ${ kentry.killer_id }`);
-          }
-        } else {
-          // dead!
-          // TODO email
-          logger.info(`user ${ kentry.user_id } DEAD in round ${ kentry.round_id } on killer game ${ kentry.killer_id }`);
+          promises.push(models.Kentry.update(kentry.id, 1));
+          logger.info(`promoting killer entry ${ kentry.id } to next round despite no prediction`);
         }
       });
-      return empty.length;
+      const upds = await Promise.all(promises);
+      logger.info(`promoted ${ upds.length } killer entries`);
+      return upds.length;
 
     } catch (e) {
       logger.error(e);
@@ -347,57 +275,93 @@ const Killer = (sequelize, DataTypes) => {
 
   };
 
-  // check if there's a winner of a killer game this week
-  model.checkWinner = async wid => {
-
+  model.killersInWeek = async wid => {
     const models = require('.');
 
     try {
-      // find all kentries for the following week
-      const list = await models.Kentry.findAll({
-        where: { week_id: wid + 1 },
-        attributes: ['killer_id', [sequelize.fn('COUNT', sequelize.col('lives')), 'players']],
-        group: ['killer_id'],
-        raw: true
+      const killers = await models.Kentry.findAll({
+        where: { week_id: wid },
+        attributes: ['killer_id'],
+        include: {
+          model: models.Killer,
+          where: { complete: 0 },
+          attributes: []
+        }
       });
 
-      // filter the entries for given week + 1
-      // any games which have a single entry for that week are complete
-      const completedGames = [];
-      list.filter(i => i.players == 1).map(i => completedGames.push(i.killer_id));
-      const killers = await models.Killer.findAll({
-        where: { id: { [Op.in]: completedGames }, complete: 0 }
-      });
+      // return just an array of killer_ids
+      return [...new Set(killers.map(({ killer_id }) => killer_id))];
 
-      // loop through any relevant killer games and set as complete
-      killers.map(async killer => {
-        killer.update({ complete: 1 });
-        // find the winners
-        let winner = await models.Kentry.findOne({
-          where: { week_id: wid + 1, killer_id: killer.id },
-          attributes: ['killer_id', 'lives', 'round_id'],
-          include: {
-            model: models.User,
-            attributes: ['id', 'username', 'email']
-          }
-        });
-        // send winner(s) an email
-        const template = 'killer_win.hbs',
-              subject  = 'Goalmine Killer update',
-              context  = {
-                name: winner.username,
-                killer: winner.killer_id,
-                lives: winner.lives,
-                round: winner.round_id
-              };
-        mail.send(winner.email, null, subject, template, context, done => {
-          logger.info(done);
-        });
-        return true;
-      });
     } catch (e) {
-      logger.error(`Error in checking killer winners: (${ e.message })`);
+
+      logger.error(`error in killersInWeek ${ e }`);
+      return [];
+
     }
+
+  };
+
+  // check if there's a winner of a killer game this week
+  model.checkWinner = async wid => {
+
+    // this is called when the week is finalised
+    const models = require('.');
+
+    const kids = await models.Killer.killersInWeek(wid);
+    logger.info('checking Killer winner');
+
+    let ret = 0;
+    for (let x = 0; x < kids.length; x++) {
+      const kid = kids[x];
+      try {
+        // list of ids of promoted players
+        const list = await models.Kentry.findAll({
+          where: { killer_id: kid, week_id: wid + 1 },
+          attributes: ['id', 'user_id']
+        });
+        // current players with one life left
+        const current = await models.Kentry.findAll({
+          where: { killer_id: kid, week_id: wid, lives: 1 }
+        });
+
+        // get array of everyone in next round
+        let promoted = [];
+        list.map(k => {
+          promoted.push(k.user_id);
+        });
+        logger.info(`killer entries promoted to next round: ${ promoted }`);
+        logger.info(list[0].kentry_id);
+        let promises = [];
+        if (promoted.length == 0) {
+          // no-one promoted, so resurrect everyone with 1 life in wid
+          current.map(kentry => {
+            logger.info(`resurrecting ${ kentry.id }`);
+            promises.push(models.Kentry.update(kentry.id, 2));
+          });
+
+        } else {
+          // some players in next round, so kill players with 1 life not in that list
+          current.map(kentry => {
+            if (promoted.indexOf(kentry.user_id) == -1) {
+              logger.info(`killing ${ kentry.id }`);
+              promises.push(models.Kentry.update(kentry.id, 3));
+            }
+          });
+          if (promoted.length == 1) {
+            // only one player so winner
+            promises.push(models.Kentry.update(list[0].id, 4));
+          }
+        }
+
+        const updates = await Promise.all(promises);
+        ret += updates.length;
+
+      } catch (e) {
+        logger.error(`Error in checking killer winners: (${ e.message })`);
+        return false;
+      }
+    }
+      return ret;
   };
 
   return model;
