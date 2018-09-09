@@ -1,8 +1,8 @@
 <h2>killer game {{ kid }} update</h2>
-<h3>{{ username }}: {{ lives }}{{#if lost }}X{{/if }}</h3>
+<h3>{{ username }}: {{ lives }}{{#if lost }}🖤{{/if }}</h3>
 
 <p>Your prediction for Killer game {{ kid }} was {{#if lost }}incorrect, however you are still alive and{{ else }}correct, and so you are{{/if }} through to round {{ rid }}</p>
-<p>You have {{ lives }} {{ pluralise lives 'life' 'lives' }} remaining, and can no use the following teams in this game:</p>
+<p>You have {{ lives }} {{ pluralise lives 'life' 'lives' }} remaining, and can no longer use the following teams in this game:</p>
 <ul>
   <li>{{ teama }}</li>
   <li>{{ teamb }}</li>
