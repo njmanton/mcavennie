@@ -86,7 +86,7 @@ const Killer = (sequelize, DataTypes) => {
         pred = 'Home';
       } else if (kentry.pred == 2) {
         pred = 'Away';
-      } else {
+      } else if (kentry.pred == 'X') {
         pred = 'Draw';
       }
 
