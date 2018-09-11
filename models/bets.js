@@ -71,7 +71,7 @@ const Bet = (sequelize, DataTypes) => {
           attributes: ['id', 'start']
         }]
       });
-      if (!matches.length) throw new Error(`no matches available for week ${ wid }`);
+      if (!matches.length) return null;
       const expired = moment(matches[0].week.start) < moment();
       let table   = [],
           players = [];
@@ -141,8 +141,8 @@ const Bet = (sequelize, DataTypes) => {
       return { table: table, players: players };
 
     } catch (e) {
-      logger.error(e);
-      return(null);
+      logger.error(e.message);
+      return null;
     }
 
 
