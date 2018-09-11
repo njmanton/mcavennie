@@ -211,10 +211,10 @@ const Prediction = (sequelize, DataTypes) => {
         count(P.pred) AS preds,
         sum(P.joker) AS joker
         FROM predictions P
-        JOIN matches M ON M.id = P.match_id AND P.user_id = :uid
+        RIGHT JOIN matches M ON M.id = P.match_id AND P.user_id = :uid
         WHERE M.week_id >= :week
         GROUP BY week_id`;
-      let preds = await models.sequelize.query(sql, {
+      const preds = await models.sequelize.query(sql, {
         replacements: {
           week: week.id,
           uid: uid },
