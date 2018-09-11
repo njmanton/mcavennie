@@ -102,12 +102,12 @@ const Killer = (sequelize, DataTypes) => {
       }
 
       // was the prediction right?
-      const lost = kentry.match ? (utils.calc(kentry.pred, kentry.match.result, 0) > 0) : false;
+      const lost = kentry.match ? utils.calcKiller(kentry.pred, kentry.match.result) : false;
 
       // label for remaining lives
       let livesLeft = '';
       if ((kentry.lives < 2) && lost) {
-        livesLeft = '<span>&#9760;</span>';
+        livesLeft = '<span>☠️</span>';
       } else {
         const heart = '<span>❤️</span>';
         const lostheart = '<span class="lost">🖤</span>';
