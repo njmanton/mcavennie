@@ -131,21 +131,30 @@ const controller = {
         }, {
           model: models.Prediction,
           attributes: ['id']
+        }, {
+          model: models.Kentry,
+          attributes: ['id']
         }]
       });
 
       let gm = 0, tp = 0, gotw = false;
+      let pmatches = [];
       matches.map(m => {
-        m.fdate = moment(m.date).format('ddd DD MMM');
-        if ((m.game & 2) != 0) {
+        let p = m.get({ plain: true });
+        p.fdate = moment(p.date).format('ddd DD MMM');
+        if ((p.game & 2) != 0) {
           tp++;
-          m.tipping = true;
+          p.tipping = true;
         }
-        if ((m.game & 1) != 0) {
+        if ((p.game & 1) != 0) {
           gm++;
-          m.goalmine = true;
+          p.goalmine = true;
         }
+        if ((p.game & 4) != 0) p.killer = true;
         if (m.gotw) gotw = true;
+
+        p.locked = (p.tipping || p.goalmine || p.killer);
+        pmatches.push(p);
       });
       if (gm == 12) {
         req.flash('info', 'There are already 12 goalmine matches this week. You will need to delete one before adding a new match');
@@ -156,10 +165,11 @@ const controller = {
       res.render('matches/add', {
         title: 'Add Match',
         week: wk.id,
-        matches: matches,
+        matches: pmatches,
         dates: dates,
         goalmine: (gm == 12),
         gotw: gotw,
+        debug: JSON.stringify(pmatches, null, 2),
         scripts: ['/js/vendor/jquery.easy-autocomplete.min.js', '/js/matchedit.js']
       });
 

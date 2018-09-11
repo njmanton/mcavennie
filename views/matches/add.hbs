@@ -24,11 +24,11 @@
         {{#if ../user.admin }}
         <td>
           <a title="manage" href="/matches/edit/{{ id }}" class="btn btn-sm btn-info">🛠</a>
-          {{#unless bets }}
-            {{#unless predictions }}
-              <button data-mid="{{ id }}" class="btn btn-sm btn-danger del">&times;</button> 
-            {{/unless }}
-          {{/unless }}
+          {{#if locked }}
+            <button title="this match can't be deleted as predictions have been made" class="btn btn-sm btn-danger" disabled><span class="fas fa-lock" ></span></button>
+          {{ else }}
+            <button data-mid="{{ id }}" class="btn btn-sm btn-danger del">&times;</button>
+          {{/if }}
         </td>
         {{/if }}
         <td>{{ fdate }}</td>
