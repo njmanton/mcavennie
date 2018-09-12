@@ -80,7 +80,8 @@ const Killer = (sequelize, DataTypes) => {
           entries: []
         };
       }
-      const expired = moment(kentry.week.start) <= moment();
+
+      const expired = moment(kentry.week.start) <= moment() || (kentry.match && kentry.match.result);
       let pred = '';
       if (kentry.pred == 1) {
         pred = 'Home';
@@ -109,8 +110,8 @@ const Killer = (sequelize, DataTypes) => {
       if ((kentry.lives < 2) && lost) {
         livesLeft = '<span>☠️</span>';
       } else {
-        const heart = '<span>❤️</span>';
-        const lostheart = '<span class="lost">🖤</span>';
+        const heart = '❤️';
+        const lostheart = '🖤';
         livesLeft = lost ? heart.repeat(kentry.lives - 1) + lostheart : heart.repeat(kentry.lives);
       }
       data.rounds[kentry.round_id].entries.push({
