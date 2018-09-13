@@ -35,99 +35,114 @@ const Killer = (sequelize, DataTypes) => {
   // build a table of killer entries
   model.table = async (kid, uid) => {
     const models = require('.');
-    const game = await models.Killer.findById(kid, {
-      attributes: ['id', 'description', 'complete'],
-      include: [{
-        model: models.User,
-        attributes: ['id', 'username']
-      }, {
-        model: models.Kentry,
-        attributes: ['round_id', 'week_id', 'user_id', 'match_id', 'pred', 'lives'],
+
+    try {
+      // get all killer entries for the given killer id
+      const game = await models.Killer.findById(kid, {
+        attributes: ['id', 'description', 'complete'],
         include: [{
-          model: models.Week,
-          attributes: ['id', 'start']
-        }, {
-          model: models.Match,
-          attributes: ['id', 'result', 'date'],
-          include: [{
-            model: models.Team,
-            as: 'TeamA',
-            attributes: ['id', 'name', 'sname']
-          }, {
-            model: models.Team,
-            as: 'TeamB',
-            attributes: ['id', 'name', 'sname']
-          }]
-        }, {
           model: models.User,
           attributes: ['id', 'username']
+        }, {
+          model: models.Kentry,
+          attributes: ['id', 'round_id', 'week_id', 'user_id', 'match_id', 'pred', 'lives'],
+          include: [{
+            model: models.Week,
+            attributes: ['id', 'start']
+          }, {
+            model: models.Match,
+            attributes: ['id', 'result', 'date'],
+            include: [{
+              model: models.Team,
+              as: 'TeamA',
+              attributes: ['id', 'name', 'sname']
+            }, {
+              model: models.Team,
+              as: 'TeamB',
+              attributes: ['id', 'name', 'sname']
+            }]
+          }, {
+            model: models.User,
+            attributes: ['id', 'username']
+          }]
         }]
-      }]
-    });
-    let data = { game: {}, rounds: {} };
-    data.game = {
-      id: game.id,
-      desc: game.description,
-      organiser: game.user,
-      complete: game.complete
-    };
-    let kentry = null;
-    for (let x = 0; x < game.kentries.length; x++) {
-      kentry = game.kentries[x];
-      if (!(kentry.round_id in data.rounds)) {
-        data.rounds[kentry.round_id] = {
-          week: kentry.week_id,
-          entries: []
-        };
-      }
-
-      const expired = moment(kentry.week.start) <= moment() || (kentry.match && kentry.match.result);
-      let pred = '';
-      if (kentry.pred == 1) {
-        pred = 'Home';
-      } else if (kentry.pred == 2) {
-        pred = 'Away';
-      } else if (kentry.pred == 'X') {
-        pred = 'Draw';
-      }
-
-      // build the fixture label
-      // if no mid, show 'no match entered'
-      // if user logged in or after expiry show match
-      // else show match entered
-      let fixture = '';
-      if (kentry.match) {
-        fixture = (uid == kentry.user.id || expired) ? [kentry.match.TeamA.name, kentry.match.TeamB.name].join(' v ') : 'match entered';
-      } else {
-        fixture = 'no match entered';
-      }
-
-      // was the prediction right?
-      const lost = kentry.match ? utils.calcKiller(kentry.pred, kentry.match.result) : false;
-
-      // label for remaining lives
-      let livesLeft = '';
-      if ((kentry.lives < 2) && lost) {
-        livesLeft = '<span>☠️</span>';
-      } else {
-        const heart = '❤️';
-        const lostheart = '🖤';
-        livesLeft = lost ? heart.repeat(kentry.lives - 1) + lostheart : heart.repeat(kentry.lives);
-      }
-      data.rounds[kentry.round_id].entries.push({
-        uid: kentry.user.id,
-        date: kentry.match ? moment(kentry.match.date).format('YYYY-MM-DD') : '-',
-        user: kentry.user.username,
-        mid: kentry.match ? kentry.match.id : null,
-        fixture: fixture,
-        result: kentry.match ? kentry.match.result : '-',
-        pred: pred,
-        editable: (!expired && (uid == kentry.user.id)),
-        lostlife: lost,
-        livesLeft: livesLeft
       });
+
+      // returned data will be information on the game, and all the rounds (entries)
+      let data = { game: {}, rounds: {} };
+      data.game = {
+        id: game.id,
+        desc: game.description,
+        organiser: game.user,
+        complete: game.complete
+      };
+
+      // iterate over the killer entries
+      for (let x = 0; x < game.kentries.length; x++) {
+        const kentry = game.kentries[x];
+        // aggregate by round_id
+        if (!(kentry.round_id in data.rounds)) {
+          data.rounds[kentry.round_id] = {
+            week: kentry.week_id,
+            entries: []
+          };
+        }
+
+        // entry is expired if we're after the start of the week, or the result has been entered
+        let expired = moment(kentry.week.start) <= moment();
+        if (kentry.match) expired |= kentry.match.result != null;
+
+        let pred = '';
+        if (kentry.pred == '1') {
+          pred = 'Home';
+        } else if (kentry.pred == '2') {
+          pred = 'Away';
+        } else if (kentry.pred == 'X') {
+          pred = 'Draw';
+        }
+
+        // build the fixture label
+        // if no match, show 'no match entered'
+        // if user logged in or after expiry show match
+        // else show 'match entered'
+        let fixture = '';
+        if (kentry.match) {
+          fixture = (uid == kentry.user.id || expired) ? [kentry.match.TeamA.name, kentry.match.TeamB.name].join(' v ') : 'match entered';
+        } else {
+          fixture = 'no match entered';
+        }
+
+        // was the prediction right?
+        let lost = kentry.match ? !utils.calcKiller(kentry.pred, kentry.match.result) : false;
+        lost |= (expired && !kentry.match);
+
+        // label for remaining lives
+        let livesLeft = '';
+        if ((kentry.lives < 2) && lost) {
+          livesLeft = '☠️';
+        } else {
+          livesLeft = lost ? `${ '❤️'.repeat(kentry.lives - 1) }🖤` : '❤️'.repeat(kentry.lives);
+        }
+        data.rounds[kentry.round_id].entries.push({
+          uid: kentry.user.id,
+          date: kentry.match ? moment(kentry.match.date).format('YYYY-MM-DD') : '-',
+          user: kentry.user.username,
+          mid: kentry.match ? kentry.match.id : null,
+          fixture: fixture,
+          result: kentry.match ? kentry.match.result : '-',
+          pred: pred,
+          editable: (!expired && (uid == kentry.user.id)),
+          lostlife: lost,
+          livesLeft: livesLeft
+        });
+      }
+      return data;
+
+    } catch (e) {
+      logger.error(`could not retrieve table for killer game ${ kid }`);
+      return null;
     }
-    return data;
+
 
   };
 
@@ -330,8 +345,8 @@ const Killer = (sequelize, DataTypes) => {
         list.map(k => {
           promoted.push(k.user_id);
         });
+
         logger.info(`killer entries promoted to next round: ${ promoted }`);
-        logger.info(list[0].kentry_id);
         let promises = [];
         if (promoted.length == 0) {
           // no-one promoted, so resurrect everyone with 1 life in wid
