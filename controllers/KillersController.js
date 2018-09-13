@@ -215,8 +215,7 @@ const controller = {
         game: killer.game,
         rounds: killer.rounds,
         edit: edit,
-        button: req.user.admin || req.user.id == killer.game.organiser.id,
-        debug: JSON.stringify([], null, 2),
+        button: (req.user.admin || req.user.id == killer.game.organiser.id) && !killer.rounds,
         scripts: ['/js/vendor/jquery.easy-autocomplete.min.js', '/js/killeredit.js']
       });
     } catch (e) {
@@ -293,11 +292,12 @@ const controller = {
   // ajax function to get killer games for logged in user, for sidebar
   get_games: [utils.isAjax, async (req, res) => {
 
+    // TODO work out how to get kentries with a badge indicating lives/prediction made
     try {
-      //if (!req.user) throw new Error('no user');
+      if (!req.user) return null;
       const games = await models.Kentry.findAll({
-        where: { user_id: 1 },
-        attributes: ['killer_id'],
+        where: { user_id: req.user.id },
+        attributes: ['killer_id', 'match_id'],
         include: {
           model: models.Killer,
           attributes: [],
