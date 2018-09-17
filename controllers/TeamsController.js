@@ -49,19 +49,42 @@ const controller = {
             }]
           });
           if (!team) throw new Error('invalid team');
+          // array to hold table data
           let games = [];
+          // array to hold summary data
+          let summary = { 'p': 0, 'w': 0, 'l': 0, 'd': 0, 'gf': 0, 'ga': 0};
           for (var x = 0; x < matches.length; x++) {
             let match = matches[x],
                 result = null,
                 home = (match.TeamA && match.TeamA.id == id);
 
             if (match.result) {
-              result = (home) ? match.result : match.result.split('-').reverse().join('-');
+              const [hg, ag] = match.result.split('-');
+              result = (home) ? match.result : [hg, ag].reverse().join('-');
+              if (['A-A', 'P-P'].indexOf(match.result)) {
+                summary.p++;
+                if (home) {
+                  summary.gf += +hg;
+                  summary.ga += +ag;
+                  if (hg > ag) summary.w++;
+                  else if (hg < ag) summary.l++;
+                  else if (hg == ag) summary.d++;
+                } else {
+                  summary.ga += +hg;
+                  summary.gf += +ag;
+                  if (hg > ag) summary.l++;
+                  else if (hg < ag) summary.w++;
+                  else if (hg == ag) summary.d++;
+                }
+              }
             }
-
+            summary.gd = summary.gf - summary.ga;
+            summary.gd = summary.gd > 0 ? `+${ summary.gd }` : summary.gd;
+            summary.pts = ((summary.w * 3 + summary.d) / summary.p).toFixed(3);
             let oppo = (home) ? { id: match.TeamB.id, name: match.TeamB.name, country: match.TeamB.country } : { id: match.TeamA.id, name: match.TeamA.name, country: match.TeamA.country };
             let league = (match.league) ? { id: match.league.id, name: match.league.name, country: match.league.country } : { id: null, name: null, country: null };
             games.push({
+              home: home,
               id: match.id,
               week: match.week_id,
               date: moment(match.date).format('DD MMM YY'),
@@ -70,14 +93,17 @@ const controller = {
               league: league
             });
           }
+
           if (req.query.json === undefined) {
             res.render('teams/view', {
               title: team.name,
               team: team,
-              matches: games
+              matches: games,
+              summary: summary,
+              debug: JSON.stringify(summary, null, 2)
             });
           } else {
-            res.send([team, games]);
+            res.send([summary, team, games]);
           }
     } catch (e) {
       logger.error(`error retrieving team id: ${ id }. Error was '${ e }'`);

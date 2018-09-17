@@ -3,6 +3,34 @@
   <table class="table">
     <thead>
       <tr>
+        <th scope="column">P</th>
+        <th scope="column">W</th>
+        <th scope="column">D</th>
+        <th scope="column">L</th>
+        <th scope="column">GF</th>
+        <th scope="column">GA</th>
+        <th scope="column">GD</th>
+        <th scope="column">Pts</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        {{#with summary }}
+        <td>{{ p }}</td>
+        <td>{{ w }}</td>
+        <td>{{ d }}</td>
+        <td>{{ l }}</td>
+        <td>{{ gf }}</td>
+        <td>{{ ga }}</td>
+        <td>{{ gd }}</td>
+        <td>{{ pts }}</td>
+        {{/with }}
+      </tr>
+    </tbody>
+  </table>
+  <table class="table">
+    <thead>
+      <tr>
         <th scope="column">Week <small>(date)</small></th>
         <th scope="column">League</th>
         <th scope="column">Opponent</th>
