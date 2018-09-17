@@ -100,10 +100,12 @@ const controller = {
   get_edit_id: [utils.isAdmin, async (req, res, id) => {
 
     try {
+      // get the week details
       const wk = await models.Week.findById(id);
       if (wk == null) throw new Error('invalid week');
       if (wk.status == 1) throw new Error('week already completed');
 
+      // build an array of dates for that week
       let dates = [];
       for (let x = 0; x < 7; x++) {
         dates.push({
@@ -111,6 +113,8 @@ const controller = {
           date: moment(wk.start).add(x, 'd').format('dddd, D MMM')
         });
       }
+
+      // get all matches associated with that week
       const matches = await models.Match.findAll({
         where: { week_id: id },
         attributes: ['id', 'game', 'date', 'gotw'],
@@ -137,10 +141,13 @@ const controller = {
         }]
       });
 
+      // iterate over matches, creating a new array
       let gm = 0, tp = 0, gotw = false;
       let pmatches = [];
       matches.map(m => {
+        // get a simple JSON object to operate on
         let p = m.get({ plain: true });
+        let deps = 0;
         p.fdate = moment(p.date).format('ddd DD MMM');
         if ((p.game & 2) != 0) {
           tp++;
@@ -153,7 +160,10 @@ const controller = {
         if ((p.game & 4) != 0) p.killer = true;
         if (m.gotw) gotw = true;
 
-        p.locked = (p.tipping || p.goalmine || p.killer);
+        if (p.bets) deps += p.bets.length;
+        if (p.predictions) deps += p.predictions.length;
+        if (p.kentries) deps += p.kentries.length;
+        p.deps = deps;
         pmatches.push(p);
       });
       if (gm == 12) {
@@ -174,11 +184,10 @@ const controller = {
       });
 
     } catch (e) {
-      req.flash('error', e.message);
+      req.flash('error', `Could not edit that week: ${ e.message }`);
+      logger.error(`Could not edit week ${ id } (${ e })`);
       res.redirect(`/weeks/${ id }`);
     }
-
-
 
   }],
 
