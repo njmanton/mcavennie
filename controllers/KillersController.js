@@ -208,14 +208,14 @@ const controller = {
       promises.push(models.Killer.table(id, uid));
       // get the data for editing entry
       promises.push(models.Killer.killerEntry(id, uid));
-
       const [killer, edit] = await Promise.all(promises);
+
       res.render('killers/view', {
         title: `Killer game ${ killer.game.id }`,
         game: killer.game,
         rounds: killer.rounds,
         edit: edit,
-        button: (req.user.admin || req.user.id == killer.game.organiser.id) && !killer.rounds,
+        button: (req.user.admin || req.user.id == killer.game.organiser.id),
         scripts: ['/js/vendor/jquery.easy-autocomplete.min.js', '/js/killeredit.js']
       });
     } catch (e) {
