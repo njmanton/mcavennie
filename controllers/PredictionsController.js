@@ -68,9 +68,10 @@ const controller = {
   // handle an ajax joker update
   post_joker: [utils.isAuthenticated, async (req, res) => {
     // { uid: xxxxx, week: xxx, mid: xxxx }
-    if (req.body.uid != '' && req.body.week != '' && req.body.mid != '') {
-      // find prediction for user for that week and game with joker set
-      // set it to 0, then set the new joker
+
+    try {
+      if (req.body.uid != '' && req.body.week != '' && req.body.mid != '') throw new Error('missing parameters');
+      // try to find any existing joker for that match and user
       const old = await models.Prediction.findOne({
         attributes: ['id', 'joker'],
         where: { user_id: req.body.uid, joker: 1 },
@@ -90,9 +91,10 @@ const controller = {
       });
       res.send(upd);
 
-    } else {
+    } catch (e) {
       res.status(400).send({ msg: 'Could not update joker' });
     }
+
   }],
 
   get_counts: [utils.isAjax, async (req, res) => {
