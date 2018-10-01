@@ -108,7 +108,7 @@ const Prediction = (sequelize, DataTypes) => {
           attributes: ['name']
         }]
       });
-      if (!matches.length) throw new Error('no matches for that week');
+      if (!matches.length) throw new Error(`no matches for week ${ week }`);
       let table   = [],
           players = [];
 
