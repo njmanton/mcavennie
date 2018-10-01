@@ -18,7 +18,7 @@ const controller = {
       promises.push(models.Week.findById(id));
       const [table, week] = await Promise.all(promises);
 
-      if (table == null) throw new Error('Couldn\'t retrieve table');
+      if (table == null) throw new Error('no table');
       const dl = moment(week.start).startOf('day').add(12, 'h'),
             expired = moment().isAfter(dl) || week.status;
 
@@ -31,9 +31,8 @@ const controller = {
         expired: expired,
         scripts: ['/js/prededit.js']
       });
-      //res.send(`<pre>${ JSON.stringify([table, overall, week], null, 2)}</pre>`);
     } catch (e) {
-      logger.error(e);
+      if (e.message != 'no table') logger.error(e);
       res.status(404).render('errors/404');
     }
 
