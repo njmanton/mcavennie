@@ -74,7 +74,7 @@ const controller = {
   get_add: [utils.isAdmin, (req, res) => {
     res.render('leagues/add', {
       title: 'Add League',
-      scripts: ['/js/vendor/jquery.easy-autocomplete.min.js', '/js/auto.js']
+      scripts: ['https://cdnjs.cloudflare.com/ajax/libs/easy-autocomplete/1.3.5/jquery.easy-autocomplete.min.js', '/js/auto.js']
     });
   }],
 
