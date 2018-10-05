@@ -62,7 +62,7 @@ $(function() {
     template: {
       type: 'custom',
       method: function(value, item) {
-        return '<span class="flag-icon flag-icon-' + (item.code).toLowerCase() + '"></span>' + value;
+        return '<span class="flag-icon flag-icon-' + (item.code).toLowerCase() + '"></span> ' + value;
       }
     }
   }).on('blur', function() {
@@ -88,7 +88,7 @@ $(function() {
     template: {
       type: 'custom',
       method: function(value, item) {
-        return '<span class="flag-icon flag-icon-' + (item.code).toLowerCase() + '"></span>' + value;
+        return '<span class="flag-icon flag-icon-' + (item.code).toLowerCase() + '"></span> ' + value;
       }
     }
   }).on('blur', function() {
