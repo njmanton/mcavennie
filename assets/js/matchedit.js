@@ -3,17 +3,18 @@
 $(function() {
 
   $('button.del').on('click', function() {
-    var mid = $(this).data('mid');
-    var row = $(this).parent().parent();
-    $.ajax({
-      url: '/matches/' + mid,
-      method: 'delete'
-    }).done(function() {
-      row.fadeOut(1000);
-    }).fail(function(e) {
-      alert('Sorry, there was a problem deleting that match: ' + e.messsage);
-    });
-
+    if (window.confirm('Please confirm you wish to delete this match')) {
+      var mid = $(this).data('mid');
+      var row = $(this).parent().parent();
+      $.ajax({
+        url: '/matches/' + mid,
+        method: 'delete'
+      }).done(function() {
+        row.fadeOut(1000);
+      }).fail(function(e) {
+        alert('Sorry, there was a problem deleting that match: ' + e.messsage);
+      });
+    }
   });
 
   // function to validate adding or editing a match
@@ -93,7 +94,7 @@ $(function() {
     template: {
       type: 'custom',
       method: function(value, item) {
-        return '<span class="flag-icon flag-icon-' + (item.country).toLowerCase() + '"></span>' + value;
+        return '<span class="flag-icon flag-icon-' + (item.country).toLowerCase() + '"></span> ' + value;
       }
     }
   }).on('blur', function() {
