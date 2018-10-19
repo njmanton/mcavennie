@@ -69,7 +69,7 @@ const controller = {
     // { uid: xxxxx, week: xxx, mid: xxxx }
 
     try {
-      if (req.body.uid != '' && req.body.week != '' && req.body.mid != '') throw new Error('missing parameters');
+      if (!req.body.uid || !req.body.week || !req.body.mid) throw new Error('missing parameters');
       // try to find any existing joker for that match and user
       const old = await models.Prediction.findOne({
         attributes: ['id', 'joker'],
@@ -91,7 +91,7 @@ const controller = {
       res.send(upd);
 
     } catch (e) {
-      res.status(400).send({ msg: 'Could not update joker' });
+      res.status(400).send({ msg: e.message });
     }
 
   }],
