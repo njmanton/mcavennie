@@ -54,7 +54,7 @@ const controller = {
 
     const matches = await models.Match.findAll({
       where: [{ teama_id: { [Op.ne]: null } }, { teamb_id: { [Op.ne]: null } }],
-      attributes: ['id', 'result', 'date'],
+      attributes: ['id', 'result', 'date', 'week_id'],
       include: [{
         model: models.Team,
         as: 'TeamA',
@@ -69,9 +69,6 @@ const controller = {
       }],
     });
 
-    matches.map(m => {
-      m.fdate = moment(m.date).format('YYYY-MM-DD');
-    });
     res.render('matches/index', {
       title: 'All Matches',
       matches: matches
