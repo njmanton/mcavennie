@@ -180,7 +180,7 @@ const controller = {
         goalmine: (gm == 12),
         gotw: gotw,
         debug: JSON.stringify(pmatches, null, 2),
-        scripts: ['/js/vendor/jquery.easy-autocomplete.min.js', '/js/matchedit.js']
+        scripts: ['https://cdnjs.cloudflare.com/ajax/libs/easy-autocomplete/1.3.5/jquery.easy-autocomplete.min.js', '/js/matchedit.js']
       });
 
     } catch (e) {
