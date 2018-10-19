@@ -7,7 +7,7 @@ $(function() {
   $('#predTable .score').on('change', function() {
     var t = $(this),
         uid = $('#preds').data('uid');
-    t.parent().removeClass('ajaxChange');
+    t.parent().parent().removeClass('ajaxChange');
     var mid = t.data('mid') || t.parent().parent().data('mid');
     $.post({
       url: '/predictions/update',
@@ -15,10 +15,10 @@ $(function() {
         pid: t.data('pid'),
         mid: mid,
         uid: uid,
-        pred: t.val()
+        pred: t.val().trim()
       }
     }).done(function(res) {
-      t.parent().addClass('ajaxChange');
+      t.parent().parent().addClass('ajaxChange');
       console.log(res);
     }).fail(function(res) {
       console.log(res);
