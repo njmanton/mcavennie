@@ -107,6 +107,9 @@ const controller = {
             model: models.User,
             attributes: ['id', 'username']
           }
+        }, {
+          model: models.Week,
+          attributes: ['start', 'status']
         }],
       });
       if (!match) throw new Error('match not found');
@@ -114,9 +117,12 @@ const controller = {
 
       match.bets.map(bet => {
         bet.sign = (bet.outcome > 0);
-        bet.outcome = bet.outcome.toLocaleString('en-GB', { style: 'currency', currency: 'GBP'});
+        if (bet.outcome) bet.outcome = bet.outcome.toLocaleString('en-GB', { style: 'currency', currency: 'GBP'});
         bet.prediction = bet.prediction == 1 ? 'Home' : bet.prediction == 2 ? 'Away' : 'Draw';
       });
+
+      const dl = moment(match.week.start).startOf('day').add(12, 'h'),
+            expired = moment().isAfter(dl) || match.week.status;
 
       match.fdate = moment(match.date).format('ddd DD MMM');
       res.render('matches/view', {
@@ -124,6 +130,7 @@ const controller = {
         data: match,
         result: match.result || 'v',
         editable: req.user && req.user.admin && match.predictions.length == 0 && match.bets.length == 0,
+        expired: expired,
         goals: goals,
         debug: JSON.stringify([match, goals], null, 2)
       });

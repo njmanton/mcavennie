@@ -16,23 +16,11 @@
       </tbody>
     </table>
 
-    <ul class="nav nav-tabs" role="tablist">
-      {{#if data.predictions }}
-      <li class="nav-item">
-        <a class="nav-link active" data-toggle="tab" href="#predictions" role="tab">Predictions</a>
-      </li>
-      {{/if }}
-      {{#if data.bets }}
-      <li class="nav-item">
-        <a class="nav-link {{#unless data.predictions }}active{{/unless }}" data-toggle="tab" href="#bets" role="tab">Bets</a>
-      </li>
-      {{/if }}
-    </ul>
-
-    <div class="tab-content">
-      {{#if data.predictions }}
-      <div class="tab-pane active" id="predictions" role="tabpanel">
+    <div class="row">
+      <div class="col">
+        {{#if data.predictions }}
         <table class="table">
+          <caption>Predictions</caption>
           <thead>
             <tr>
               <th>Player</th>
@@ -48,11 +36,13 @@
           {{/each }}
           </tbody>
         </table>
+        {{/if }}      
       </div>
-      {{/if }}
-      {{#if data.bets }}
-      <div class="tab-pane {{#unless data.predictions }}active{{/unless }}" id="bets" role="tabpanel">
+
+      <div class="col">
+        {{#if data.bets }}
         <table class="table">
+          <caption>Bets</caption>
           <thead>
             <tr>
               <th>Player</th>
@@ -64,28 +54,29 @@
             {{#each data.bets }}
             <tr>
               <td>{{ user.username }}</td>
-              <td>{{ prediction }}</td>
+              <td>{{#if ../expired }}{{ prediction }}{{ else }}??{{/if }}</td>
               <td class="money {{#if sign }}pos{{/if }}">{{ outcome }}</td>
             </tr>    
             {{/each }}
           </tbody>
         </table>
+        {{/if }}
       </div>
-      {{/if }}
     </div>
-    
-    {{#if editable }}
-      <a class="btn btn-info" href="/matches/edit/{{ data.id }}">Edit</a>
-      <button data-mid="{{ data.id }}" data-week="{{ data.week_id }}" id="deleteMatch" class="btn btn-danger">Delete</button>
-    {{/if }}
-    {{#if user.admin }}
-      <div id="scoreUpdateButton">
-        <button class="btn btn-info">Update Score</button>      
-      </div>
-      <div id="scoreUpdate">
-        <input type="text" class="score" name="" pattern="\d{1,2}-\d{1,2}" placeholder="X-X" maxlength="5" data-mid="{{ data.id }}" />
-      </div>
 
+
+    {{#if editable }}
+    <a class="btn btn-info" href="/matches/edit/{{ data.id }}">Edit</a>
+    <button data-mid="{{ data.id }}" data-week="{{ data.week_id }}" id="deleteMatch" class="btn btn-danger">Delete</button>
+    {{/if }}
+
+    {{#if user.admin }}
+    <div id="scoreUpdateButton">
+      <button class="btn btn-info">Update Score</button>      
+    </div>
+    <div id="scoreUpdate">
+      <input type="text" class="score" name="" pattern="\d{1,2}-\d{1,2}" placeholder="X-X" maxlength="5" data-mid="{{ data.id }}" />
+    </div>
     {{/if }}
 
   </div>
