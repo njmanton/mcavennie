@@ -64,6 +64,28 @@ const User = (sequelize, DataTypes) => {
     }
   });
 
+  // get summary stats for user uid
+  model.home = async uid => {
+    const models = require('.');
+
+    let promises = [];
+    promises.push(models.Prediction.findOne({
+      where: { user_id: uid },
+      attributes: [[models.sequelize.fn('SUM', models.sequelize.col('points')), 'points'], [models.sequelize.fn('COUNT', models.sequelize.col('points')), 'cnt']],
+      raw: true
+    }));
+
+    promises.push(models.Bet.findOne({
+      where: { user_id: uid },
+      attributes: [[models.sequelize.fn('SUM', models.sequelize.col('outcome')), 'outcome'], [models.sequelize.fn('COUNT', models.sequelize.col('outcome')), 'cnt']],
+      raw: true
+    }));
+
+    const [gm, tp] = await Promise.all(promises);
+    return { gm: gm, tp: tp };
+
+  };
+
   return model;
 
 };
