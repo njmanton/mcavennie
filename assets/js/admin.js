@@ -14,6 +14,8 @@ $(function() {
       result: box.val()
     }).done(function(res) {
       console.log(res);
+      box.parent().parent().addClass('ajaxChange').fadeOut(2000);
+
     }).fail(function(err) {
       console.log(err);
     });
