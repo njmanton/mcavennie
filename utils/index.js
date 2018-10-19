@@ -110,6 +110,7 @@ const utils = {
   },
 
   // scores a killer prediction.
+  // returns 1 - correct result, 0 - incorrect result, null - error
   calcKiller: (pred, result) => {
 
     // pred is 1,2,'X'. result is actual match result
