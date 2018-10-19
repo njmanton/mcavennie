@@ -212,7 +212,8 @@ const Prediction = (sequelize, DataTypes) => {
         sum(P.joker) AS joker
         FROM predictions P
         RIGHT JOIN matches M ON M.id = P.match_id AND P.user_id = :uid
-        WHERE M.week_id >= :week
+        JOIN weeks W ON W.id = M.week_id 
+        WHERE M.week_id >= :week AND W.status = 0
         GROUP BY week_id`;
       const preds = await models.sequelize.query(sql, {
         replacements: {
@@ -226,10 +227,9 @@ const Prediction = (sequelize, DataTypes) => {
         let txt = '';
         const pbadge = itm.preds < 12 ? 'warning' : 'success';
         txt = `<a href="/predictions/${ itm.week_id }">Wk ${ itm.week_id }</a> <span class="badge badge-${ pbadge }">${ itm.preds }</span>`;
-        if (itm.joker == 0) txt += '<span class="badge badge-danger">J</span>';
+        if (itm.joker == 0) txt += ' <span title="You have not played a Joker for this week" class="badge badge-danger" style="cursor: pointer;">J</span>';
         html.push(`<li>${ txt }</li>`);
       }
-
       return html;
 
     } catch (e) {
