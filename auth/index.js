@@ -60,6 +60,9 @@ module.exports = app => {
       };
       const out = await models.Match.outstanding();
       res.locals.user.pending = out.length;
+
+      req.user.gmrank = await models.Standing.balance(req.user.id); // TODO change to req.user
+      req.user.tprank = await models.Place.balance(req.user.id);
     }
     next();
   });
