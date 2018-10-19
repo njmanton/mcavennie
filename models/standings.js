@@ -73,7 +73,6 @@ const Standing = (sequelize, DataTypes) => {
       return false;
     }
 
-
   };
 
   model.overall = async (uid, wid, single = true) => {
@@ -208,7 +207,7 @@ const Standing = (sequelize, DataTypes) => {
       return table.filter(ele => ele.id == uid)[0];
 
     } catch (e) {
-     return null;
+      return null;
     }
 
   };
