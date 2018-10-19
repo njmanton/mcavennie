@@ -21,22 +21,16 @@ var hbs = bars.create({
   defaultLayout: 'default',
   extname: '.hbs',
   helpers: {
-    // helper to render the remaining lives in Killer
-    // lives - # lives before current game, lost - did player lose a life this game
-    killerLives: (lives, lost) => {
-      if (lives - lost <= 0) {
-        return '<span>&#9760;</span>';
-      } else {
-        let heart = '<span>♥</span>',
-            lostheart = '<span class="lost">♥</span>';
-        return lost ? heart.repeat(lives - 1) + lostheart : heart.repeat(lives);
-      }
-    },
     ledger: amount => {
       return amount.toLocaleString('en-GB', { style: 'currency', currency: 'GBP'});
     },
     pluralise: (num, singular, plural = `${singular}s`) => {
       return (num !== 1) ? plural : singular;
+    },
+    ordinal: num => {
+      const ones = num % 10;
+      const suffix = (ones > 3 || num == 11) ? 'th' : ['st', 'nd', 'rd'][ones - 1];
+      return num + suffix;
     }
   }
 });
@@ -65,7 +59,7 @@ app.use((req, res, next) => {
   res.locals.flash_success = req.flash('success');
   res.locals.flash_error = req.flash('error');
   res.locals.flash_info = req.flash('info');
-  res.locals.dev = process.env.NODE_ENV || 'dev';
+  res.locals.dev = true;
   next();
 });
 // authentication using passport.js
