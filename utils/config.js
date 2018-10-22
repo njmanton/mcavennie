@@ -1,5 +1,6 @@
 'use strict';
 
+const dev = process.env.NODE_DEV !== 'prod';
 const config = {
 
   callbacks: {
@@ -8,11 +9,11 @@ const config = {
   },
 
   cfg: {
-    ignoreExpiry:   0, // ignores deadlines
-    allowCurlAjax:  1, // allow a curl request sent to an ajax-only route
-    allowCurlAuth:  0, // allow a curl request sent to an authorised route
-    allowCurlAdmin: 1, // allow a curl request sent to an admin-only route
-    allowCurlAnon:  0  // allow a curl request send to an anon-only route
+    ignoreExpiry:   0 && dev, // ignores deadlines
+    allowCurlAjax:  1 && dev, // allow a curl request sent to an ajax-only route
+    allowCurlAuth:  0 && dev, // allow a curl request sent to an authorised route
+    allowCurlAdmin: 0 && dev, // allow a curl request sent to an admin-only route
+    allowCurlAnon:  0 && dev  // allow a curl request send to an anon-only route
   },
 
   logToConsole: true,
