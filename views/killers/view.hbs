@@ -1,7 +1,7 @@
 <section>
-  <h3>Killer game {{ game.id }}</h3>
-  <p>{{ game.desc }}</p>
-  <p>{{ game.organiser.username }}</p>
+  <h2>Killer game {{ game.id }}</h2>
+  <p>Description: {{ game.desc }}</p>
+  <p>Organiser: {{ game.organiser.username }}</p>
   {{#if button }} <a href="/killers/edit/{{ game.id }}" class="btn btn-info">Edit game</a>{{/if }}
 
   {{#each rounds }}
@@ -13,7 +13,7 @@
           <th>Player</th>
           <th>Fixture</th>
           <th>Prediction</th>
-          <th>Date</th>
+          <th class="hidesmall">Date</th>
           <th>Result</th>
           <th>Lives</th>
         </tr>
@@ -24,7 +24,7 @@
           <td><a href="/users/{{ uid }}">{{ user }}</a></td>
           <td>{{ fixture }} {{#if editable }}<button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editKiller">Edit</button>{{/if }}</td>
           <td>{{ pred }}</td>
-          <td>{{ date }}</td>
+          <td class="hidesmall">{{ date }}</td>
           <td>{{ result }}</td>
           <td class="life">{{{ livesLeft }}}</td>
         </tr>
@@ -77,61 +77,6 @@
       </tbody>
     </table>
   {{/each }}
-
+  <p>See <a href="/killers">all</a> killer games.</p>
 </section>
 
-<!-- Modal -->
-{{!-- <div class="modal fade" id="editKiller" tabindex="-1" role="dialog" aria-labelledby="editKillerLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <form action="/killers/play" method="POST">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Edit Game</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-            <input type="hidden" id="addKillerKyid" name="kyid" value="{{ edit.kentry.id }}">
-            <input type="hidden" id="addKillerKid" name="kid" value="{{ game.id }}" />
-            <input type="hidden" id="addKillerUid" name="uid" value="{{ user.id }}" />
-            <input type="hidden" id="addKillerRid" name="rid" value="{{ edit.kentry.round_id }}">
-            <input type="hidden" id="addKillerWid" name="wid" value="{{ edit.kentry.week_id }}">
-            <input type="hidden" id="addKillerMid" name="mid" value="{{ edit.kentry.match.id }}">
-            <input type="hidden" id="addKillerHomeId" name="homeId" value="{{ edit.kentry.match.TeamA.id }}" />
-            <input type="hidden" id="addKillerAwayId" name="awayId" value="{{ edit.kentry.match.TeamB.id }}" />
-            <label for="addKillerHome">Home
-              <input id="addKillerHome" name="home" type="text" value="{{ edit.kentry.match.TeamA.name }}" />
-            </label><br />
-            <label for="addKillerAway">Away
-              <input id="addKillerAway" name="away" type="text" value="{{ edit.kentry.match.TeamB.name }}" />
-            </label><br />
-            <label for="addKillerPred">Prediction
-              <select name="pred" id="addKillerPred">
-                <option value="1">Home</option>
-                <option value="X">Draw</option>
-                <option value="2">Away</option>
-              </select>
-            </label><br />
-            <label for="addKillerDate">Date:
-              <select name="date" id="addKillerDate">
-                {{#each edit.dates }}
-                <option value="{{ id }}" {{#if sel }}selected="selected"{{/if }}>{{ date }}</option>
-                {{/each }}
-              </select>
-            </label>
-            <h6>Used teams</h6>
-            <ul>
-              {{#each edit.teams }}
-              <li><a href="/teams/{{ team.id }}">{{ team.name }}</a></li>
-              {{/each }}
-            </ul>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
-          <input type="submit" class="btn btn-sm btn-primary" />
-        </div>
-      </div>
-    </form>
-  </div>
-</div> --}}

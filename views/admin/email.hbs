@@ -1,6 +1,6 @@
 <section>
-  <h4>Send email</h4>
-  <form action="/admin/email" method="post">
+  <h3>Send email</h3>
+  <form id="adminMailForm" action="/admin/email" method="post">
     <fieldset class="form-group">
       <p>Send a new bulk email to tipping players at <code>tipping-players@goalmine.eu</code>. You can use <a data-toggle="collapse" href="#mdExamples" aria-expanded="false" aria-controls="mdExamples">markdown and emoji</a> to format text. Examples: </p>
       <aside class="collapse" id="mdExamples">
@@ -37,8 +37,8 @@
               <td><hr /></td>
             </tr>
             <tr>
-              <th><kbd>[link](http://google.com)</kbd></th>
-              <td><samp><a href="https://google.com/">link</a></samp></td>
+              <th><kbd>[link](https://google.com)</kbd></th>
+              <td><samp><a href="https://google.com/">link</a></samp> (you <b>cannot</b> use a relative URL, e.g. <code>/matches/34</code> here)</td>
             </tr>
             <tr>
               <th><kbd>:soccer: :heart: :flag-br: etc.</kbd></th>

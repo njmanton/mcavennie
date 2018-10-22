@@ -1,4 +1,4 @@
-<section id="preds" data-uid="{{ user.id }}">
+<section id="preds" data-uid="{{ user.id }}" data-week="{{ week }}">
   <h2>Predictions</h2>
 
     <p>Pick or update your predictions for week {{ week }} here. You can make as many changes as you want, up until the deadline. All predictions are automatically saved on entry (the cell will turn green briefly on a successful update). Don't forget to pick a Joker for one of the matches as well, which can't be the <acronym title="Game of the Week">GotW</acronym>.</p>
@@ -18,8 +18,8 @@
         {{#each table }}    
         <tr data-mid="{{ header.id }}">
           {{#with header }}
-          <td class="grid-header">{{ date }}</td>
-          <td class="grid-header flag {{ country }}"><span class="league">{{ league }}</span></td>
+          <td class="hidesmall grid-header">{{ date }}</td>
+          <td class="grid-header"><span class="league flag-icon flag-icon-{{ country }}"></span> {{ league }}</td>
           <td class="grid-header"><a href="/matches/{{ id }}">{{ fixture }}</a> {{#if gotw }}(GotW){{/if}}</td>
           <td class="grid-header">{{ result }}</td>
           {{/with }}
@@ -31,6 +31,8 @@
                 <td><input class="score" data-mid="{{#if match_id }}{{ match_id }}{{ else }}{{ ../header.id }}{{/if }}" data-pid="{{ id }}" placeholder="X-X" pattern="\d{1,2}-\d{1,2}" maxlength="5" type="text" value="{{ pred }}" />
                 {{#unless @../first }} {{!-- first here refers to the *row*, so the gotw --}}
                   <input type="radio" name="joker" data-mid="{{#if match_id }}{{ match_id }}{{ else }}{{ ../header.id }}{{/if }}" {{#if joker }}checked="checked"{{/if}} value="{{ ../header.id }}" />
+                {{ else }} {{!-- dummy element to preserve spacing --}}
+                  <input type="radio" disabled checked style="visibility: hidden;" />
                 {{/unless }}
                 </td>
               {{ else }} {{!-- not first column, and not expired, so don't show --}}

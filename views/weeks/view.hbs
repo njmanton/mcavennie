@@ -1,6 +1,7 @@
 <section>
-  <a class="btn btn-info" href="/weeks/edit/{{ week.id }}">Edit</a>
-  <table>
+  {{#if user.admin }}<a class="btn btn-info" href="/weeks/edit/{{ week.id }}">Edit</a>{{/if }}
+  {{#if matches }}
+  <table class="table">
     <caption>Week {{ week.id }}</caption>
     <thead>
       <tr>
@@ -14,11 +15,20 @@
       {{#each matches }}
       <tr>
         <td>{{ fdate }}</td>
-        <td><a href="/matches/{{ id }}">{{ fixture }}</a></td>
+        <td>
+          <a href="/matches/{{ id }}">{{ fixture }}</a>
+          {{#if goalmine }}<span title="goalmine" class="badge badge-primary">G</span>{{/if }}
+          {{#if tipping }}<span title="tipping" class="badge badge-success">T</span>{{/if }}
+          {{#if killer }}<span title="killer" class="badge badge-info">K</span>{{/if }}
+          {{#if gotw }}<span title="gotw" class="badge badge-warning">GotW</span>{{/if }}
+        </td>
         <td><span class="flag-icon flag-icon-{{ league.country }}"></span> <a href="/leagues/{{ league.id }}">{{ league.name }}</a></td>
         <td>{{ result }}</td>
       </tr>
       {{/each }}
     </tbody>
   </table>
+  {{ else }}
+  <p>There are no matches available yet for this week. {{#if user.admin }}Would you like to <a href="/weeks/edit/{{ week.id }}">add</a> some?{{/if }}</p>
+  {{/if }}
 </section>

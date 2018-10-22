@@ -1,0 +1,7 @@
+<section>
+  <h3>{{ player.username }}</h3>
+  {{#if stats }}
+  <p>You have made a total of {{ stats.gm.cnt }} predictions, for a total of {{ stats.gm.points }} points.</p>
+  <p>You have made {{ stats.tp.cnt }} bets, for a total outcome of {{ ledger stats.tp.outcome }}</p>
+  {{/if }}
+</section>

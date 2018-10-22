@@ -1,0 +1,22 @@
+<section>
+  <table class="table">
+    <thead>
+      <tr>
+        <td>Week</td>
+        <td>League</td>
+        <td>Fixture</td>
+        <td>Result</td>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each matches }}
+      <tr>
+        <td><a href="/weeks/{{ week_id }}">{{ week_id }}</a></td>
+        <td><span class="flag-icon flag-icon-{{ league.country }}"></span> <a href="/leagues{{ league.id }}">{{ league.name }}</a></td>
+        <td><a href="/matches/{{ id }}">{{ TeamA.name }} v {{ TeamB.name }}</a></td>
+        <td>{{ result }}</td>
+      </tr>
+      {{/each }}
+    </tbody>
+  </table>
+</section>

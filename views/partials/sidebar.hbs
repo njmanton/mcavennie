@@ -1,34 +1,35 @@
 <nav id="sidebar" role="navigation">
   <div class="sidebar-content">
     <section class="sidebar-header">
-      <p><img src="/img/gm_logo.png" alt="Goalmine logo" height="140px" width="140px" /></p>
+      <p><a href="/" title="Home"><img src="/img/gm_logo.png" alt="Goalmine logo" height="120px" width="120px" /></a></p>
       {{#if user.image}}<img src="{{ user.image }}" />{{/if }}
-      {{#if user }}
-      {{ user.username }} 
-      {{#if user.admin }}
-      <span class="badge badge-warning">admin</span> 
-      {{/if }}  
-      <br>
-      <a href="/logout">logout</a>
+        {{#if user }}
+        {{ user.username }} 
+        {{#if user.admin }}
+        <span class="badge badge-warning">admin</span> 
+        {{/if }}  
+        <a href="/logout">logout</a>
       {{ else }}
-      <br>
-      <a href="/login">login</a>
+        <a href="/login">login</a>
       {{/if }}    
     </section>
+    <hr />
 
     {{#if user.goalmine }}
     <section>
-      <h5>Goalmine <small class="gmrank"></small></h5>
+      <h5>Goalmine <small id="gm-rank">{{#if user.gmrank }}({{ user.gmrank.points }}pts, {{ ordinal user.gmrank.rank }}){{/if }}</small></h5>
       <ul id="gm-list"></ul>
-      {{ ledger user.balance.ledger }}
+      Balance: {{ ledger user.balance.ledger }}
     </section>
+    <hr />
     {{/if }}
 
     {{#if user.tipping }}
     <section>
-      <h5>Tipping <small class="tprank"></small></h5>
+      <h5>Tipping <small class="tprank">{{#if user.tprank }}({{ user.tprank.balance }}, {{ ordinal user.tprank.rank }}){{/if }}</small></h5>
       <ul id="tp-list"></ul>
     </section>
+    <hr />
     {{/if }}
 
     {{#if user.killer }}
@@ -36,18 +37,37 @@
       <h5>Killer</h5>
       <ul id="k-list"></ul>
     </section>
+    <hr />
     {{/if }}
 
     {{#if user.admin }}
     <section>
       <h5>Admin</h5>
       <ul>
-        <li>{{#if user.pending }}<a href="/admin/pending">Pending matches</a> <span class="badge badge-success">{{ user.pending }}</span>{{ else }}No results pending{{/if }}</li>
+        <li>{{#if user.pending }}<a href="/admin/pending">Pending results</a> <span class="badge badge-success">{{ user.pending }}</span>{{ else }}No results pending{{/if }}</li>
         <li><a href="/admin/email">Send bulk email</a></li>
+        <li><a href="/posts/add">Create new post</a></li>
         <li><a href="/killers/add">Add new killer game</a></li>
       </ul>
     </section>
+    <hr />
     {{/if }}
+
+    <section>
+      <h5>Data</h5>
+      <ul>
+        <li><a href="/weeks">weeks</a></li>
+        <li><a href="/standings">standings</a></li>
+        <li><a href="/teams">teams</a></li>
+        <li><a href="/leagues">leagues</a></li>
+      </ul>
+    </section>
+    <hr />
+
+    <section>
+      <p><a href="/pages/general"><i class="fas fa-question-circle"></i> Help</a></p>
+    </section>
+
   </div>
 
   <section class="sidebar-menu">

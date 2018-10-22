@@ -28,7 +28,7 @@
       <input type="checkbox" name="gotw" id="addMatchGotw" {{#if gotw }}disabled="disabled"{{/if }} />
     </label>
 
-    <fieldset>
+    <fieldset class="oddsFields">
       <label for="addMatchOdds1">Home Odds
         <input name="odds1" id="addMatchOdds1" {{#unless edit.game.tipping }}disabled="disabled"{{/unless }} type="text" value="{{ edit.odds1 }}" />
       </label>

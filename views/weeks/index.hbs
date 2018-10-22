@@ -1,6 +1,6 @@
 <section>
   <h3>Weeks</h3>
-  <table>
+  <table class="table">
     <thead>
       <tr>
         <th>Week</th>
@@ -16,8 +16,8 @@
         <td><a href="/weeks/{{ id }}">{{ id }}</a></td>
         <td>{{ start }}-{{ end }}</td>
         <td>{{ label }}</td>
-        <td><a href="/predictions/{{ id }}">View</a></td>
-        <td><a href="/bets/{{ id }}">View</a></td>
+        <td>{{#if matches }}<a href="/predictions/{{ id }}">View</a>{{/if }}</td>
+        <td>{{#if matches }}<a href="/bets/{{ id }}">View</a>{{/if }}</td>
       </tr>
       {{/each }}
     </tbody>

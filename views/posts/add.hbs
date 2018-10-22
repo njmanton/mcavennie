@@ -1,7 +1,7 @@
 <section>
   <h3>{{#if edit }}Edit{{ else }}Add{{/if }} Post</h3>
 
-  <form action="/posts/{{#if edit }}edit{{ else }}add{{/if }}" method="post">
+  <form id="postForm" action="/posts/{{#if edit }}edit{{ else }}add{{/if }}" method="post">
     <fieldset class="form-group">
       <p>Add a new post to appear on the main page. Posts are ordered in date order (latest first), and 'sticky' posts will always be placed at the top. You can use <a data-toggle="collapse" href="#mdExamples" aria-expanded="false" aria-controls="mdExamples">markdown and emoji</a> to format text. Examples: </p>
       <aside class="collapse" id="mdExamples">

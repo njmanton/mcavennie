@@ -10,7 +10,7 @@
         <th scope="column">GF</th>
         <th scope="column">GA</th>
         <th scope="column">GD</th>
-        <th scope="column">Pts</th>
+        <th scope="column"><abbr title="Average points (3 for win, 1 for draw)">Pts</abbr></th>
       </tr>
     </thead>
     <tbody>
@@ -31,7 +31,7 @@
   <table class="table">
     <thead>
       <tr>
-        <th scope="column">Week <small>(date)</small></th>
+        <th scope="column">Week <small class="hidesmall">(date)</small></th>
         <th scope="column">League</th>
         <th scope="column">Opponent</th>
         <th scope="column">Result</th>
@@ -40,7 +40,7 @@
     <tbody>
       {{#each matches }}
       <tr>
-        <td><a href="/weeks/{{ week }}">{{ week }} <small>({{ date }})</small></a></td>
+        <td><a href="/weeks/{{ week }}">{{ week }} <small class="hidesmall">({{ date }})</small></a></td>
         <td><span class="flag-icon flag-icon-{{ league.country }}"></span> <a href="/leagues/{{ league.id }}">{{ league.name }}</a></td>
         <td><span class="flag-icon flag-icon-{{ opponent.country }}"></span> <a href="/teams/{{ opponent.id }}">{{ opponent.name }}</a></td>
         <td>{{ result }}</td>

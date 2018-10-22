@@ -18,6 +18,6 @@
     </div>
   </div>
   {{/each }}
-  <p>see <a href="/posts">all</a> posts</p>
+  <p style="text-align: center">see <a href="/posts">all</a> posts {{#if user.admin }}| <a href="/posts/add">add</a> a post{{/if }}</p>
 
 </section>
