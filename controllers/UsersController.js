@@ -11,29 +11,26 @@ const folder    = 'users';
 
 const controller = {
 
-  get_id: (req, res, id) => {
-    try {
-      let user = models.User.findById(id);
-      let preds = models.Prediction.findAll({
-        where: { user_id: id },
-        attributes: ['id', 'pred']
-      });
-      models.sequelize.Promise.join(user, preds, (user, preds) => {
-        if (user) {
-          res.render(`${ folder }/view`, {
-            title: user.username,
-            player: user,
-            preds: preds,
-            admin: false
-          });
-        } else {
-          res.status(404).render('errors/404');
-        }
-      });
-    } catch (e) {
-      logger.error(e);
+  get_id: async (req, res, id) => {
+    if (req.user && req.user.id == id) {
+      res.status(302).redirect('/home');
+    } else {
+      try {
+        let promises = [];
+        promises.push(models.User.findById(id));
+        const [user] = await Promise.all(promises);
+        if (!user) throw new Error();
+        res.render(`${ folder }/view`, {
+          title: user.username,
+          player: user,
+          //preds: preds,
+          admin: user.admin
+        });
+      } catch (e) {
+        logger.error(e);
+        res.status(404).render('/errors/404');
+      }
     }
-
   },
 
   get_update: [utils.isAuthenticated, (req, res) => {
