@@ -13,7 +13,7 @@ const controller = {
 
   get_id: async (req, res, id) => {
     if (req.user && req.user.id == id) {
-      res.status(302).redirect('/home');
+      res.status(303).redirect('/home');
     } else {
       try {
         let promises = [];
