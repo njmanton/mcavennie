@@ -1,16 +1,20 @@
 @import url('https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css');
 @import url('/assets/flags/css/flag-icon.min.css');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/easy-autocomplete/1.3.5/easy-autocomplete.min.css');
 
 // prediction colours
 $cd: #ff0; // correct goal difference
 $cs: #0f0; // correct score
-$cr: #66f; // correct result
+$cr: rgb(235, 115, 115); // correct result
 $wj: #f66; // wrong result on joker
 
 // block colours
 $bg: #fff;
 $dark-bg: #222;
 $dark-fg: #dedede;
+$result-team: #833b3b;
+$result-score: #270e5f;
+$result-fg: #eee;
 
 // dynamic colours
 $flash-hilite: #7f7;
@@ -24,6 +28,15 @@ $flash-hilite: #7f7;
   margin-bottom: 0;
 }
 
+hr {
+  border-top: 1px solid $dark-fg;
+  margin-left: 2rem;
+}
+
+h1, h3 {
+  text-align: center;
+}
+
 // main structural tags
 #sidebar {
   background-color: $dark-bg;
@@ -33,12 +46,36 @@ $flash-hilite: #7f7;
   max-width: 250px;
   min-height: 100vh;
   min-width: 250px;
-  text-align: center;
   transition: all .3s;
+
+  h5 {
+    font-variant: small-caps;
+    font-weight: bold;
+
+    small {
+      font-size: 70%;
+      font-variant: normal;
+    }
+  }
 
   &.active {
     margin-left: 0;
   }
+
+  ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
+
+  section {
+    padding-left: 2rem;
+
+    &.sidebar-menu {
+      padding-left: 0;
+      text-align: center;
+    }
+  }
+
 }
 
 main {
@@ -76,10 +113,48 @@ footer {
 }
 
 .ajaxChange {
-  -webkit-animation-duration: 2s;
+  -webkit-animation-duration: 3s;
   -webkit-animation-name: fin;
-  animation-duration: 2s;
+  animation-duration: 3s;
   animation-name: fin;
+}
+
+.post {
+  background-color: #fff;
+  border: 1px solid $dark-bg;
+  margin: 0 auto 1rem;
+  width: 80%;
+
+  .postheader {
+    font-size: 2rem;
+    padding: 1rem 0;
+    text-align: center;
+  }
+
+  .postbody {
+    border-top: 1px solid $dark-bg;
+    padding: .5rem;
+  }
+
+  .postfooter {
+    background-color: $dark-bg;
+    border: 1px solid $dark-bg;
+    color: white;
+    padding: .5rem;
+
+    a {
+      color: white;
+    }
+
+    .ctrl {
+      float: right;
+    }
+  }
+}
+
+// killer hearts
+.life {
+  font-size: 1.2rem;
 }
 
 // last

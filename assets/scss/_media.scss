@@ -7,4 +7,21 @@
       margin-left: -220px;
     }
   }
+
+  .hidesmall {
+    display: inherit;
+  }
+
+  td.hidesmall, th.hidesmall {
+    display: table-cell;
+  }
+
+  .matchresult {
+    margin: 0 auto 2rem;
+    width: 80%;
+  }
+
+  .grid td, .grid th {
+    font-size: 1rem;
+  }
 }

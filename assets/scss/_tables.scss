@@ -5,6 +5,11 @@ caption {
   text-align: center;
 }
 
+// hide certain cells on small screens (default)
+.hidesmall {
+  display: none;
+}
+
 td.score, input.score {
   width: 3.2rem;
 }
@@ -33,15 +38,16 @@ input {
 }
 
 .money {
-  color: red;
+  color: #f00;
 
   &.pos {
-    color: green;
+    color: #0f0;
   }
 }
 
 .matchresult {
   border-collapse: separate;
+  color: $result-fg;
   margin-bottom: 1rem;
   width: 100%;
 
@@ -50,13 +56,84 @@ input {
   }
 
   th {
-    background-color: aquamarine;
+    background-color: $result-team;
     padding: .5rem .5rem .5rem 3rem;
+
+    &:hover {
+      background-color:  lighten($result-team, 10%);
+    }
   }
 
   td {
-    background-color: antiquewhite;
+    background-color: $result-score;
+    font-weight: bold;
     text-align: center;
-    width: 4rem;
+    width: 6rem;
+  }
+
+  th a {
+    color: $result-fg;
+    display: block;
+    height: 100%;
+    line-height: 2.5;
+    text-decoration: none;
+    width: 100%;
+  }
+
+}
+
+// grid table for bets
+.grid {
+
+  margin-bottom: 3rem;
+
+  td, th {
+    font-size: .9rem;
+    height: 2rem;
+    min-width: 2rem;
+    padding: 0 .3rem;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .grid-header {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &:nth-child(2) {
+      text-align: left;
+    }
   }
 }
+
+#predTable.grid {
+
+  td, th {
+    border: 1px solid #222;
+  }
+}
+
+.bet-cell {
+  background-color: red;
+  border-radius: 5px;
+  color: white;
+
+  &.win {
+    background-color: green;
+  }
+}
+
+.btn-odds {
+
+  input {
+    clip: rect(0, 0, 0, 0);
+    position: absolute;
+  }
+}
+
+.btn-odds.btn-primary:not(:disabled).active {
+  background-color: #f29a02;
+  border-color: #e89402;
+}
+
