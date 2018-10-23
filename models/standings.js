@@ -13,7 +13,7 @@ const Standing = (sequelize, DataTypes) => {
       primaryKey: true,
       autoIncrement: true
     },
-    match_id: {
+    week_id: {
       type: DataTypes.INTEGER,
       allowNull: false
     },
