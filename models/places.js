@@ -20,10 +20,6 @@ const Place = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    match_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false
-    },
     balance: {
       type: DataTypes.FLOAT,
       allowNull: true
