@@ -1,32 +1,24 @@
 <section>
   <h3>{{ title }}</h3>
 
-  <p>Complete this form to add a new Killer game. Create a description for the game, then select all the players taking part (ctrl/⌘-click to add multiple). Finally select the start week, which may be up to three weeks in the future. Multiple killer games can be run in parallel.</p>
-
   <form action="/killers/add" method="POST">
     <fieldset class="form-group">
-      <label for="desc">Description
-        <textarea class="form-control" name="desc" cols="30" rows="3"></textarea>
-      </label>
+      <p>Complete this form to add a new Killer game. Create a description for the game, then select all the players taking part (ctrl/⌘-click to add multiple). Finally select the start week, which may be up to three weeks in the future. Multiple killer games can be run in parallel.</p>
+      <textarea class="form-control" placeholder="description of game" name="desc" rows="3"></textarea>
+      <label for="players">Players</label>
+      <select class="form-control" name="players" id="players" multiple="multiple">
+        {{#each players }}
+        <option value="{{ id }}">{{ username }}</option>
+        {{/each }}
+      </select>
+      <label for="week">Start Week</label>
+      <select class="form-control" name="week" id="week">
+        {{#each weeks }}
+        <option value="{{ id }}">{{ id }} (w/c {{ fstart }})</option>
+        {{/each }}
+      </select>  
+      <input type="submit" class="btn btn-info" value="Add" />
     </fieldset>
-    <fieldset class="form-group">
-      <label for="players">Players:
-        <select class="form-control" name="players" id="players" multiple="multiple">
-          {{#each players }}
-          <option value="{{ id }}">{{ username }}</option>
-          {{/each }}
-        </select>
-      </label>
-      <label for="week">Start Week
-        <select class="form-control" name="week" id="week">
-          {{#each weeks }}
-          <option value="{{ id }}">{{ id }} (w/c {{ fstart }})</option>
-          {{/each }}
-        </select>
-      </label>      
-    </fieldset>
-
-    <input type="submit" class="btn btn-info" value="Add" />
 
   </form>
 </section>
