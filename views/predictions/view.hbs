@@ -20,17 +20,17 @@
           {{#with header }}
           <td class="hidesmall grid-header">{{ date }}</td>
           <td class="grid-header"><span class="league flag-icon flag-icon-{{ country }}"></span> {{ league }}</td>
-          <td class="grid-header"><a href="/matches/{{ id }}">{{ fixture }}</a> {{#if gotw }}(GotW){{/if}}</td>
+          <td class="grid-header"><a tabindex="3" href="/matches/{{ id }}">{{ fixture }}</a> {{#if gotw }}(GotW){{/if}}</td>
           <td class="grid-header">{{ result }}</td>
           {{/with }}
           {{#each preds }}
             {{#if ../../expired }} {{!-- if deadline reached, show the predictions and scores, regardless of user --}}
                 <td class="pts{{ points }} {{#if joker}}joker{{/if }}">{{ pred }}</td>
             {{ else }} {{!-- deadline not reached, so show form if logged in user --}}
-              {{#if @first }}{{!-- first here is first column, i.e. the logged in user's predictions --}}
-                <td><input class="score" data-mid="{{#if match_id }}{{ match_id }}{{ else }}{{ ../header.id }}{{/if }}" data-pid="{{ id }}" placeholder="X-X" pattern="\d{1,2}-\d{1,2}" maxlength="5" type="text" value="{{ pred }}" />
+              {{#if @first }}{{!-- first here is first prediction column, i.e. the logged in user's predictions --}}
+                <td><input tabindex="1" class="score" data-mid="{{#if match_id }}{{ match_id }}{{ else }}{{ ../header.id }}{{/if }}" data-pid="{{ id }}" placeholder="X-X" pattern="\d{1,2}-\d{1,2}" maxlength="5" type="text" value="{{ pred }}" />
                 {{#unless @../first }} {{!-- first here refers to the *row*, so the gotw --}}
-                  <input type="radio" name="joker" data-mid="{{#if match_id }}{{ match_id }}{{ else }}{{ ../header.id }}{{/if }}" {{#if joker }}checked="checked"{{/if}} value="{{ ../header.id }}" />
+                  <input type="radio" tabindex="2" name="joker" data-mid="{{#if match_id }}{{ match_id }}{{ else }}{{ ../header.id }}{{/if }}" {{#if joker }}checked="checked"{{/if}} value="{{ ../header.id }}" />
                 {{ else }} {{!-- dummy element to preserve spacing --}}
                   <input type="radio" disabled checked style="visibility: hidden;" />
                 {{/unless }}
