@@ -1,5 +1,9 @@
 <section>
   <h3>Leagues</h3>
+  <p>There are a total of {{ leaues.length }} leagues with at least one match, since Goalmine started. The list of leagues includes <a href="/leagues/26">cup competitions</a> and international <a href="/leagues/76">club</a> and <a href="/leagues/94">country</a> competitions and qualifiers. Click on a league to see all matches.</p>
+  {{#if user.admin }}
+  <p><a href="/leagues/add" class="btn btn-sm btn-info">Add new league</a></p>
+  {{/if }}
   <table class="table">
     <thead>
       <tr>
