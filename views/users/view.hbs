@@ -4,4 +4,6 @@
   <p>You have made a total of {{ stats.gm.cnt }} predictions, for a total of {{ stats.gm.points }} points.</p>
   <p>You have made {{ stats.tp.cnt }} bets, for a total outcome of {{ ledger stats.tp.outcome }}</p>
   {{/if }}
+  <p>{{#if gmwins }}Goalmine victories: {{#each gmwins }}⭐️{{/each }}{{/if }}</p>
+  <p>{{#if gmwins }}Tipping victories: {{#each tpwins }}⭐️{{/each }}{{/if }}</p>
 </section>
