@@ -5,6 +5,8 @@ const models    = require('../models'),
       bCrypt    = require('bcrypt-nodejs'),
       utils     = require('../utils'),
       logger    = require('winston'),
+      Op        = require('sequelize').Op,
+      config    = require('../utils/config'),
       moment    = require('moment');
 
 const folder    = 'users';
@@ -18,17 +20,24 @@ const controller = {
       try {
         let promises = [];
         promises.push(models.User.findById(id));
-        const [user] = await Promise.all(promises);
-        if (!user) throw new Error();
+        promises.push(models.Standing.findAll({
+          where: { user_id: id, position: 1, week_id: { [Op.gte]: config.goalmine.start_week } }
+        }));
+        promises.push(models.Place.findAll({
+          where: { user_id: id, rank: 1, week_id: { [Op.gte]: config.goalmine.start_week } }
+        }));
+        const [user, gmwins, tpwins] = await Promise.all(promises);
+        if (!user) throw new Error('no user');
         res.render(`${ folder }/view`, {
           title: user.username,
           player: user,
-          //preds: preds,
+          gmwins: gmwins,
+          tpwins: tpwins,
           admin: user.admin
         });
       } catch (e) {
         logger.error(e);
-        res.status(404).render('/errors/404');
+        res.status(404).render('errors/404');
       }
     }
   },
