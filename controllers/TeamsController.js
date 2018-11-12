@@ -4,6 +4,7 @@ const models  = require('../models'),
       Op      = require('sequelize').Op,
       utils   = require('../utils'),
       logger  = require('winston'),
+      uniqBy  = require('lodash/uniqby'),
       folder  = 'teams',
       moment  = require('moment');
 
@@ -18,6 +19,7 @@ const controller = {
       });
       res.render(`${ folder }/index`, {
         title: 'All Teams',
+        countries: uniqBy(teams, 'country').length,
         teams: teams
       });
     } catch (e) {
