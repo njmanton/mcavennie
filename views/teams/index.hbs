@@ -5,12 +5,17 @@
   <p><a href="/teams/add" class="btn btn-sm btn-info">Add new team</a></p>
   {{/if }}
   <table class="table">
+    <tr>
+      <th>Team</th>
+      <th>Matches</th>
+    </tr>
     {{#each teams }}
     <tr>
       <td>
        <span class="flag-icon flag-icon-{{ country }}"></span>
-        <a href="/teams/{{ id }}">{{ name }}</a>
+        <a href="/teams/{{ id }}">{{ @key }}</a>
       </td>
+      <td>{{ matches }}</td>
     </tr>
     {{/each }}
   </table>

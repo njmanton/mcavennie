@@ -13,10 +13,7 @@ const controller = {
   get_index: async (req, res) => {
 
     try {
-      const teams = await models.Team.findAll({
-        attributes: ['id', 'name', 'country'],
-        raw: true
-      });
+      const teams = await models.Team.getMatches();
       res.render(`${ folder }/index`, {
         title: 'All Teams',
         countries: uniqBy(teams, 'country').length,
