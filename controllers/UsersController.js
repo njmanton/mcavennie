@@ -99,46 +99,69 @@ const controller = {
   // show reset password screen
   get_reset_id: async (req, res, id) => {
 
-    const user = await models.User.findOne({
-      where: { resetpwd: id },
-      attributes: ['username', 'email']
-    });
+    try {
 
-    if (!user) {
-      req.flash('error', 'Sorry, that code wasn\'t recognised. Please try again');
-      res.redirect('/');
-    } else {
+      const user = await models.User.findOne({
+        where: { resetpwd: id },
+        attributes: ['username', 'email', 'resetpwd']
+      });
+      if (!user) throw new Error('Sorry, that code was not valid. Please try again');
       res.render(`${ folder }/reset`, {
         title: 'Reset Password',
-        username: user.username
+        usr: user,
+        scripts: ['/js/resetform.js']
       });
+
+    } catch (e) {
+      req.flash('error', e.message);
+      res.redirect(`/users/reset/${ id }`);
     }
 
   },
 
   // handle reset password request
   post_reset_id: async (req, res, id) => {
-    const user = await models.User.findOne({
-      where: { resetpwd: id, email: req.body.email }
-    });
-    // check there's a user with that reset code and email, and don't rely on
-    // javascript to enforce password complexity
-    if (user && (req.body.pwd.length > 7) && (req.body.pwd == req.body.rpt)) {
+
+    try {
+
+      const user = await models.User.findOne({
+        where: { resetpwd: id, email: req.body.email }
+      });
+      if (!user) throw new Error('Can\'t find user');
+      if (req.body.pwd.length < 8 || req.body.pwd != req.body.rpt) throw new Error('The password details were not correct. Please try again');
+
       const row = await user.update({
         password: bCrypt.hashSync(req.body.rpt, bCrypt.genSaltSync(10), null),
         resetpwd: null
       });
-      if (row) {
-        logger.info(`${ user.username } successfully reset their password`);
-        req.flash('success', 'Your password has been updated. You can now log in');
-      } else {
-        req.flash('error', 'Sorry, unable to update that account');
-      }
-      res.redirect('/');
-    } else {
-      req.flash('error', 'Sorry, those details were not valid');
-      res.redirect('/');
+      if (!row) throw new Error('Unable to update account. Please try again');
+      logger.info(`${ user.username } successfully reset their password`);
+      req.flash('success', 'Your password has been updated. You can now log in');
+      res.redirect('/login');
+
+    } catch (e) {
+      req.flash('error', e.message);
+      res.redirect(`/users/reset/${ id }`);
     }
+
+    // // check there's a user with that reset code and email, and don't rely on
+    // // javascript to enforce password complexity
+    // if (user && (req.body.pwd.length > 7) && (req.body.pwd == req.body.rpt)) {
+    //   const row = await user.update({
+    //     password: bCrypt.hashSync(req.body.rpt, bCrypt.genSaltSync(10), null),
+    //     resetpwd: null
+    //   });
+    //   if (row) {
+    //     logger.info(`${ user.username } successfully reset their password`);
+    //     req.flash('success', 'Your password has been updated. You can now log in');
+    //   } else {
+    //     req.flash('error', 'Sorry, unable to update that account');
+    //   }
+    //   res.redirect('/');
+    // } else {
+    //   req.flash('error', 'Sorry, those details were not valid');
+    //   res.redirect(`/users/reset/${ id }`);
+    // }
 
   },
 
