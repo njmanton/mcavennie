@@ -1,6 +1,6 @@
 <section>
   <h3>Goalmine Teams</h3>
-  <p>There are a total of <b>{{ teams.length }}</b> teams, from <b>{{ countries }}</b> different countries, that have been included in at least one game since Goalmine started. Click on a team to see all matches.</p>
+  <p>There are a total of <b>{{ teams.length }}</b> teams from {{ countries }} countries that have been included in at least one game, since Goalmine started. Click on a team to see all matches.</p>
   {{#if user.admin }}
   <p><a href="/teams/add" class="btn btn-sm btn-info">Add new team</a></p>
   {{/if }}
@@ -13,7 +13,7 @@
     <tr>
       <td>
        <span class="flag-icon flag-icon-{{ country }}"></span>
-        <a href="/teams/{{ id }}">{{ @key }}</a>
+        <a href="/teams/{{ id }}">{{ name }}</a>
       </td>
       <td>{{ matches }}</td>
     </tr>

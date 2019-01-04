@@ -28,6 +28,16 @@ $flash-hilite: #7f7;
   margin-bottom: 0;
 }
 
+// override some easy-autocomplete defaults
+.easy-autocomplete input {
+  border-color: initial;
+  border-radius: 0;
+  border-style: inset;
+  border-width: 2px;
+  box-shadow: none;
+  padding: inherit;
+}
+
 hr {
   border-top: 1px solid $dark-fg;
   margin-left: 2rem;
