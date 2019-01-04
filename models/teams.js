@@ -49,17 +49,20 @@ const Team = (sequelize, DataTypes) => {
       });
       matches.map(match => {
         if (teams[match.TeamA.name] == undefined) {
-          teams[match.TeamA.name] = { matches: 1, id: match.TeamA.id, country: match.TeamA.country };
+          teams[match.TeamA.name] = { name: match.TeamA.name , matches: 1, id: match.TeamA.id, country: match.TeamA.country };
         } else {
           teams[match.TeamA.name].matches++;
         }
         if (teams[match.TeamB.name] == undefined) {
-          teams[match.TeamB.name] = { matches: 1, id: match.TeamB.id, country: match.TeamB.country };
+          teams[match.TeamB.name] = { name: match.TeamB.name , matches: 1, id: match.TeamB.id, country: match.TeamB.country };
         } else {
           teams[match.TeamB.name].matches++;
         }
       });
-      return teams;
+      let arr = [];
+      for (let a in teams) arr.push(teams[a]);
+
+      return arr;
 
     } catch (e) {
 
