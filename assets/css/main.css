@@ -133,6 +133,14 @@ textarea.form-control, #sendPreviewPane, #postPreviewPane {
 .alert {
   margin-bottom: 0; }
 
+.easy-autocomplete input {
+  border-color: initial;
+  border-radius: 0;
+  border-style: inset;
+  border-width: 2px;
+  box-shadow: none;
+  padding: inherit; }
+
 hr {
   border-top: 1px solid #dedede;
   margin-left: 2rem; }
