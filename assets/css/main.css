@@ -105,9 +105,10 @@ textarea.form-control, #sendPreviewPane, #postPreviewPane {
   font-size: 1.5rem;
   padding: 1.5rem; }
 
-#postForm input[type='submit'],
-#adminMailForm input[type='submit'],
-#loginForm input[type='submit'] {
+.login input {
+  display: inline-block; }
+
+.login input[type='submit'] {
   line-height: 0; }
 
 .easy-autocomplete-container ul {
@@ -115,6 +116,19 @@ textarea.form-control, #sendPreviewPane, #postPreviewPane {
 
 .oddsFields input {
   width: 3rem; }
+
+.intrainput {
+  color: #080;
+  cursor: help;
+  display: inline-block;
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-left: -3rem;
+  min-width: 2.5rem;
+  text-align: center; }
+
+.intrainput.err {
+  color: #f00; }
 
 .alert {
   margin-bottom: 0; }
