@@ -14,7 +14,7 @@ $(function() {
             team_dup.addClass('success').removeClass('err').html('√').show();
             submit.removeAttr('disabled');
           } else {
-            team_dup.addClass('err').removeClass('success').html('exists').show();
+            team_dup.addClass('err').removeClass('success').html('!!').show();
             submit.attr('disabled', 'disabled');
           }
         });
@@ -36,7 +36,7 @@ $(function() {
             league_dup.addClass('success').removeClass('err').html('√').show();
             submit.removeAttr('disabled');
           } else {
-            league_dup.addClass('err').removeClass('success').html('exists').show();
+            league_dup.addClass('err').removeClass('success').html('!!').show();
             submit.attr('disabled', 'disabled');
           }
         });
