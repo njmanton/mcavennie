@@ -114,7 +114,7 @@ const controller = {
 
     } catch (e) {
       req.flash('error', e.message);
-      res.redirect(`/users/reset/${ id }`);
+      res.redirect('/');
     }
 
   },
